@@ -1,2 +1,2 @@
-# megaclite
-Example Implementation PGP in Golang + HTMX
+# Megaclite
+![banner](.github/image.png)
