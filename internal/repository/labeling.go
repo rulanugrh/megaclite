@@ -8,7 +8,7 @@ import (
 
 type LabelInterface interface {
 	Create(req domain.MailLabel) (*domain.MailLabel, error)
-	Get(id uint, userID uint) (*domain.MailLabel, error)
+	Get(id uint) (*domain.MailLabel, error)
 	UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error)
 	GetByCategory(categoryID uint, userID uint) (*[]domain.MailLabel, error)
 }
@@ -38,9 +38,9 @@ func (l *label) Create(req domain.MailLabel) (*domain.MailLabel, error) {
 	return &response, nil
 }
 
-func (l *label) Get(id uint, userID uint) (*domain.MailLabel, error) {
+func (l *label) Get(id uint) (*domain.MailLabel, error) {
 	var response domain.MailLabel
-	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE id = ? AND user_id = ?", id, userID).Scan(&response).Error
+	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE id = ?", id).Scan(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("Cannot get mail with this id")

@@ -22,3 +22,8 @@ type GetMailLabel struct {
 	Subtitle string `json:"subtitle"`
 	To       string `json:"to"`
 }
+
+type Category struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
