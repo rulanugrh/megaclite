@@ -14,10 +14,11 @@ type GetDetailMail struct {
 	Subtitle string `json:"subtitle"`
 }
 
-type GetMail struct {
+type GetMailLabel struct {
 	Category string `json:"category"`
 	Message  string `json:"msg"`
 	From     string `json:"from"`
 	Title    string `json:"title"`
 	Subtitle string `json:"subtitle"`
+	To       string `json:"to"`
 }
