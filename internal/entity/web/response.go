@@ -1,5 +1,9 @@
 package web
 
+import (
+	"github.com/ProtonMail/gopenpgp/v3/crypto"
+)
+
 type GetUser struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -26,4 +30,12 @@ type GetMailLabel struct {
 type Category struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
+}
+
+type PGPResponse struct {
+	PrivateKeyRing *crypto.KeyRing
+	PublicKeyRing  *crypto.KeyRing
+	PublicKey      *crypto.Key
+	PrivateKey     *crypto.Key
+	SessionKey     *crypto.SessionKey
 }
