@@ -24,9 +24,14 @@ func NewUserRepository(config config.Database) UserInterface {
 }
 func (u *user) Register(req domain.Register) (*domain.User, error) {
 	var response domain.User
-	err := u.connection.DB.Exec("INSERT INTO users(username, mail, password) VALUES (?,?,?)",
-		req.Email,
+	find := u.connection.DB.Exec("SELECT * FROM users WHERE email = ?", req.Email)
+	if find.RowsAffected > 0 {
+		return nil, web.InternalServerError("Sorry email has been taken")
+	}
+
+	err := u.connection.DB.Exec("INSERT INTO users(username, email, password) VALUES (?,?,?)",
 		req.Username,
+		req.Email,
 		req.Password,
 	).Find(&response).Error
 

@@ -1,8 +1,12 @@
 package service
 
 import (
+	"io/fs"
+	"os"
+
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
 )
 
@@ -15,11 +19,13 @@ type UserInterface interface {
 
 type user struct {
 	repository repository.UserInterface
+	middleware middleware.PGPInterface
 }
 
-func NewUserService(repository repository.UserInterface) UserInterface {
+func NewUserService(repository repository.UserInterface, middleware middleware.PGPInterface) UserInterface {
 	return &user{
 		repository: repository,
+		middleware: middleware,
 	}
 }
 
@@ -34,6 +40,18 @@ func (u *user) Register(req domain.Register) (*web.GetUser, error) {
 		Email:    data.Email,
 		Address:  data.Address,
 	}
+
+	err = os.Mkdir("./tmp/"+req.Username, fs.FileMode(os.O_RDWR))
+	if err != nil {
+		return nil, web.InternalServerError("Cannot create new folder")
+	}
+
+	pgp, err := u.middleware.GeneratePGPKey(req)
+	if err != nil {
+		return nil, web.InternalServerError(err.Error())
+	}
+
+	println(pgp)
 
 	return &response, nil
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type PGPInterface interface {
-	GeneratePGPKey(req domain.User) (*web.PGPResponse, error)
+	GeneratePGPKey(req domain.Register) (*web.PGPResponse, error)
 }
 
 type pgp struct {
@@ -21,7 +21,7 @@ func NewPGPMiddleware(utils *crypto.PGPHandle) PGPInterface {
 		utils: utils,
 	}
 }
-func (p *pgp) GeneratePGPKey(req domain.User) (*web.PGPResponse, error) {
+func (p *pgp) GeneratePGPKey(req domain.Register) (*web.PGPResponse, error) {
 	session, err := p.utils.GenerateSessionKey()
 	if err != nil {
 		return nil, web.InternalServerError("cannot generate session key: " + err.Error())

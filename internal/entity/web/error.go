@@ -53,3 +53,11 @@ func Forbidden(msg string) Response {
 		Data:    nil,
 	}
 }
+
+func BadRequest(msg string) Response {
+	return Response{
+		Code:    400,
+		Message: msg,
+		Data:    nil,
+	}
+}
