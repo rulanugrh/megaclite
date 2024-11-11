@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
 )
 
@@ -15,15 +16,22 @@ type LabelingInterface interface {
 
 type labeling struct {
 	repository repository.LabelInterface
+	validation middleware.IValidation
 }
 
 func NewLabelMailService(repository repository.LabelInterface) LabelingInterface {
 	return &labeling{
 		repository: repository,
+		validation: middleware.NewValidation(),
 	}
 }
 
 func (l *labeling) Create(req domain.MailLabel) (*web.GetMailLabel, error) {
+	err := l.validation.Validate(req)
+	if err != nil {
+		return nil, l.validation.ValidationMessage(err)
+	}
+
 	data, err := l.repository.Create(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())

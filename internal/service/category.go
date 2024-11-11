@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
 )
 
@@ -14,15 +15,22 @@ type CategoryInterface interface {
 
 type category struct {
 	repository repository.CategoryInterface
+	validation middleware.IValidation
 }
 
 func NewCategoryService(repository repository.CategoryInterface) CategoryInterface {
 	return &category{
 		repository: repository,
+		validation: middleware.NewValidation(),
 	}
 }
 
 func (c *category) Create(req domain.Category) (*web.Category, error) {
+	err := c.validation.Validate(req)
+	if err != nil {
+		return nil, c.validation.ValidationMessage(err)
+	}
+
 	data, err := c.repository.Create(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())

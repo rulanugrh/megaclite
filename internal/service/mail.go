@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
 )
 
@@ -15,15 +16,22 @@ type MailInterface interface {
 
 type mail struct {
 	repository repository.MailInterface
+	validation middleware.IValidation
 }
 
 func NewMailService(repository repository.MailInterface) MailInterface {
 	return &mail{
 		repository: repository,
+		validation: middleware.NewValidation(),
 	}
 }
 
 func (m *mail) Create(req domain.Mail) (*web.GetDetailMail, error) {
+	err := m.validation.Validate(req)
+	if err != nil {
+		return nil, m.validation.ValidationMessage(err)
+	}
+
 	data, err := m.repository.Create(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())

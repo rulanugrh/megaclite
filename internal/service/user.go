@@ -20,16 +20,23 @@ type UserInterface interface {
 type user struct {
 	repository repository.UserInterface
 	middleware middleware.PGPInterface
+	validation middleware.IValidation
 }
 
-func NewUserService(repository repository.UserInterface, middleware middleware.PGPInterface) UserInterface {
+func NewUserService(repository repository.UserInterface, middlewares middleware.PGPInterface) UserInterface {
 	return &user{
 		repository: repository,
-		middleware: middleware,
+		middleware: middlewares,
+		validation: middleware.NewValidation(),
 	}
 }
 
 func (u *user) Register(req domain.Register) (*web.GetUser, error) {
+	err := u.validation.Validate(req)
+	if err != nil {
+		return nil, u.validation.ValidationMessage(err)
+	}
+
 	data, err := u.repository.Register(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
@@ -57,6 +64,11 @@ func (u *user) Register(req domain.Register) (*web.GetUser, error) {
 }
 
 func (u *user) Login(req domain.Login) (*web.GetUser, error) {
+	err := u.validation.Validate(req)
+	if err != nil {
+		return nil, u.validation.ValidationMessage(err)
+	}
+
 	data, err := u.repository.Login(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
