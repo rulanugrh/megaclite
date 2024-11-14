@@ -1,6 +1,19 @@
 version: '3.9'
 
 services:
+  db-app:
+    container_name: database-megaclite
+    hostname: db-app
+    image: postgres:alpine
+    environtment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASS}
+    ports:
+      - ${DATABASE_PORT}:5432
+    networks:
+      - internals
+      
   megaclite-app:
     container_name: megaclite-app
     hostname: megaclite
