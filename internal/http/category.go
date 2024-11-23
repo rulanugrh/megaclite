@@ -25,6 +25,16 @@ func NewCategoryHandler(service service.CategoryInterface) CategoryInterface {
 	}
 }
 
+// @Summary create category
+// @ID create
+// @Tags categories
+// @Accept json
+// @Produce json
+// @Param request body domain.Category true "request body for create new category"
+// @Route /api/category/create [post]
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (ct *category) Create(c *fiber.Ctx) error {
 	// parsing request to body parser
 	var request domain.Category
@@ -45,6 +55,16 @@ func (ct *category) Create(c *fiber.Ctx) error {
 	return c.Status(201).JSON(web.Created("Success Create New Category", data))
 }
 
+// @Summary delete category by id
+// @ID delete
+// @Tags categories
+// @Accept json
+// @Produce json
+// @Param id path int true "id category"
+// @Route /api/category/delete/{id} [delete]
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (ct *category) Delete(c *fiber.Ctx) error {
 	// get request id from url parameter
 	getID := c.Params("id")
@@ -65,6 +85,17 @@ func (ct *category) Delete(c *fiber.Ctx) error {
 	return c.Status(200).JSON(web.Success("Success Delete Category", nil))
 }
 
+// @Summary update category by id
+// @ID update
+// @Tags categories
+// @Accept json
+// @Produce json
+// @Param request body domain.Category true "request body for updated data"
+// @Param id path int true "id category"
+// @Route /api/category/update/{id} [put]
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (ct *category) Update(c *fiber.Ctx) error {
 	// parsing body request to entity
 	var request domain.Category

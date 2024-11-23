@@ -23,6 +23,16 @@ func NewUserHandler(service service.UserInterface) UserInterface {
 	}
 }
 
+// @Summary register new account
+// @ID register
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body domain.Register true "request body for new user"
+// @Router /api/user/register [post]
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (u *user) Register(c *fiber.Ctx) error {
 	var request domain.Register
 	err := c.BodyParser(&request)
@@ -38,6 +48,16 @@ func (u *user) Register(c *fiber.Ctx) error {
 	return c.Status(201).JSON(web.Created("Success create new account", data))
 }
 
+// @Summary login user
+// @ID login
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body domain.Login true "request body for login existing account"
+// @Route /api/user/login [post]
+// @Succes 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (u *user) Login(c *fiber.Ctx) error {
 	var request domain.Login
 	err := c.BodyParser(&request)
@@ -53,6 +73,16 @@ func (u *user) Login(c *fiber.Ctx) error {
 	return c.Status(201).JSON(web.Success("Success login into account", data))
 }
 
+// @Summary get user by emails
+// @ID get_by_emails
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param emails path string true "Emails User"
+// @Route /api/user/{emails} [get]
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (u *user) Get(c *fiber.Ctx) error {
 	emails := c.Params("emails")
 

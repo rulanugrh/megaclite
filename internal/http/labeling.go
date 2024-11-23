@@ -26,6 +26,16 @@ func NewLabelMailHandler(service service.LabelingInterface) LabelingInterface {
 	}
 }
 
+// @Summary add mail to label
+// @ID adding
+// @Tags labelings
+// @Accept json
+// @Produce json
+// @Param request body domain.MailLabel true "body request for add label mail"
+// @Router /api/label/add [post]
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (l *labeling) Create(c *fiber.Ctx) error {
 	// Parsing request to body parse
 	var request domain.MailLabel
@@ -46,6 +56,16 @@ func (l *labeling) Create(c *fiber.Ctx) error {
 	return c.Status(201).JSON(web.Created("Success Create New Label Mail", data))
 }
 
+// @Summary find label by id
+// @ID findByID
+// @Tags labelings
+// @Accept json
+// @Produce json
+// @Param id path int true "id label"
+// @Router /api/label/find/{id} [get]
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (l *labeling) FindByID(c *fiber.Ctx) error {
 	// get parameter from url
 	getID := c.Params("id")
@@ -66,6 +86,17 @@ func (l *labeling) FindByID(c *fiber.Ctx) error {
 	return c.Status(200).JSON(web.Success("Success Get Mail with This ID", data))
 }
 
+// @Summary find by category
+// @ID findByCategory
+// @Tags labelings
+// @Accept json
+// @Produce json
+// @Param user_id path int true "user id"
+// @Param category path int true "category id"
+// @Route /api/label/get/{user_id}/{category}
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 	// get parameter from url
 	getCategory := c.Params("category")
@@ -93,6 +124,7 @@ func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 	return c.Status(200).JSON(web.Success("Success Get Mail with This Category", data))
 }
 
+// @Summary update label by user id
 func (l *labeling) UpdateLabel(c *fiber.Ctx) error {
 	// parsng request to body parser
 	var request domain.MailLabel
