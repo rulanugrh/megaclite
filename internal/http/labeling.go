@@ -125,6 +125,16 @@ func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 }
 
 // @Summary update label by user id
+// @ID updateLabel
+// @Tags labelings
+// @Accept json
+// @Produce json
+// @Param request body domain.MailLabel true "request body for update label"
+// @Param id path int true "parameter id"
+// @Route /api/label/update/{id} [put]
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
 func (l *labeling) UpdateLabel(c *fiber.Ctx) error {
 	// parsng request to body parser
 	var request domain.MailLabel
