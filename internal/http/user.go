@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"io"
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
@@ -45,7 +48,10 @@ func (u *user) Register(c *fiber.Ctx) error {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}
 
-	return c.Status(201).JSON(web.Created("Success create new account", data))
+	c.Set("Content-Type", "text/plain")
+	c.Set("Content-Disposition", "attachment; filename="+"keygen.asc")
+
+	return c.Status(201).Send(data.Key)
 }
 
 // @Summary login user
@@ -59,13 +65,27 @@ func (u *user) Register(c *fiber.Ctx) error {
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
 func (u *user) Login(c *fiber.Ctx) error {
-	var request domain.Login
-	err := c.BodyParser(&request)
-	if err != nil {
-		return c.Status(500).JSON(web.InternalServerError("Cannot parsing body request"))
+	request := domain.Login{
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
 	}
 
-	data, err := u.service.Login(request)
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.Status(500).JSON(web.InternalServerError("Cannot read form file"))
+	}
+
+	read, err := file.Open()
+	if err != nil {
+		log.Println("Cannot open file request")
+	}
+
+	content, err := io.ReadAll(read)
+	if err != nil {
+		log.Println("Cannot read content file")
+	}
+
+	data, err := u.service.Login(request, content)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

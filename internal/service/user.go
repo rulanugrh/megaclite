@@ -1,18 +1,18 @@
 package service
 
 import (
-	"io/fs"
-	"os"
+	// "io/fs"
 
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserInterface interface {
-	Register(req domain.Register) (*web.GetUser, error)
-	Login(req domain.Login) (*web.GetUser, error)
+	Register(req domain.Register) (*web.PGPResponse, error)
+	Login(req domain.Login, key []byte) (*web.GetUser, error)
 	GetEmail(email string) (*web.GetUser, error)
 	GetByID(id uint) (*web.GetUser, error)
 }
@@ -31,39 +31,43 @@ func NewUserService(repository repository.UserInterface, middlewares middleware.
 	}
 }
 
-func (u *user) Register(req domain.Register) (*web.GetUser, error) {
+func (u *user) Register(req domain.Register) (*web.PGPResponse, error) {
 	err := u.validation.Validate(req)
 	if err != nil {
 		return nil, u.validation.ValidationMessage(err)
 	}
 
-	data, err := u.repository.Register(req)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, web.BadRequest("Error while hashed password")
+	}
+
+	request := domain.Register{
+		Username: req.Username,
+		Password: string(hashed),
+		Email:    req.Email,
+	}
+
+	data, err := u.repository.Register(request)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
 
-	response := web.GetUser{
+	key, err := u.middleware.Encryption(req)
+	if err != nil {
+		return nil, web.InternalServerError(err.Error())
+	}
+
+	response := web.PGPResponse{
+		Key:      key,
 		Username: data.Username,
 		Email:    data.Email,
-		Address:  data.Address,
 	}
-
-	err = os.Mkdir("./tmp/"+req.Username, fs.FileMode(os.O_RDWR))
-	if err != nil {
-		return nil, web.InternalServerError("Cannot create new folder")
-	}
-
-	pgp, err := u.middleware.GeneratePGPKey(req)
-	if err != nil {
-		return nil, web.InternalServerError(err.Error())
-	}
-
-	println(pgp)
 
 	return &response, nil
 }
 
-func (u *user) Login(req domain.Login) (*web.GetUser, error) {
+func (u *user) Login(req domain.Login, key []byte) (*web.GetUser, error) {
 	err := u.validation.Validate(req)
 	if err != nil {
 		return nil, u.validation.ValidationMessage(err)
@@ -72,6 +76,16 @@ func (u *user) Login(req domain.Login) (*web.GetUser, error) {
 	data, err := u.repository.Login(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
+	if err != nil {
+		return nil, web.BadRequest("Sorry password not matched")
+	}
+
+	check, err := u.middleware.Decryption(*data, key)
+	if !check && err != nil {
+		return nil, web.BadRequest("Sorry secret message and keygen not matched")
 	}
 
 	response := web.GetUser{

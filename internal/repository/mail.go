@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
@@ -25,13 +27,15 @@ func NewMailRepository(conn config.Database) MailInterface {
 
 func (m *mail) Create(req domain.MailRegister) (*domain.Mail, error) {
 	var response domain.Mail
-	err := m.connection.DB.Exec("INSERT INTO mails(from, to, message, title, subtitle) VALUES (?, ?, ?, ?, ?)",
+	err := m.connection.DB.Exec("INSERT INTO mails(created_at, updated_at, from, to, message, title, subtitle) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		time.Now(),
+		time.Now(),
 		req.From,
 		req.To,
 		req.Message,
 		req.Title,
 		req.Subtitle,
-	).Find(&response).Error
+	).First(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("Cannot create mail")

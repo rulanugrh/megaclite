@@ -4,15 +4,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type MultiAttachment []string
+
 type Mail struct {
 	gorm.Model
 	From       string
 	To         string
-	Message    string   `gorm:"type:text"`
-	Title      string   `gorm:"type:varchar(100)"`
-	Subtitle   string   `gorm:"type:varchar(100)"`
-	Attachment []string `gorm:"type:text[];default:null"`
-	Star       bool     `gorm:"default:false"`
+	Message    string          `gorm:"type:text"`
+	Title      string          `gorm:"type:varchar(100)"`
+	Subtitle   string          `gorm:"type:varchar(100)"`
+	Attachment MultiAttachment `gorm:"type:text"`
+	Star       bool            `gorm:"default:false"`
 }
 
 type MailLabel struct {

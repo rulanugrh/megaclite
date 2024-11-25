@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
@@ -25,11 +27,13 @@ func NewLabelMailRepository(config config.Database) LabelInterface {
 
 func (l *label) Create(req domain.MailLabelRegister) (*domain.MailLabel, error) {
 	var response domain.MailLabel
-	err := l.connection.DB.Exec("INSERT INTO mail_labels(category_id, user_id, mail_id) VALUES (?,?,?)",
+	err := l.connection.DB.Exec("INSERT INTO mail_labels(created_at, updated_at, category_id, user_id, mail_id) VALUES (?,?,?,?,?)",
+		time.Now(),
+		time.Now(),
 		req.CategoryID,
 		req.UserID,
 		req.MailID,
-	).Find(&response).Error
+	).First(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("cannot add new labels for mails")

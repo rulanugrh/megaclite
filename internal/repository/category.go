@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
@@ -25,7 +27,9 @@ func NewCategoryRepository(config config.Database) CategoryInterface {
 func (c *category) Create(req domain.CategoryRegister) (*domain.Category, error) {
 	var response domain.Category
 
-	err := c.connection.DB.Exec("INSERT INTO categories(name, description) VALUES(?,?)",
+	err := c.connection.DB.Exec("INSERT INTO categories(created_at, updated_at, name, description) VALUES(?,?,?,?)",
+		time.Now(),
+		time.Now(),
 		req.Name,
 		req.Description,
 	).Find(&response).Error
@@ -40,8 +44,8 @@ func (c *category) Create(req domain.CategoryRegister) (*domain.Category, error)
 func (c *category) Update(id uint, req domain.CategoryUpdate) (*domain.Category, error) {
 	var response domain.Category
 
-	err := c.connection.DB.Exec("UPDATE categories SET name = ?, description = ? WHERE id = ?",
-		req.Name, req.Description, id,
+	err := c.connection.DB.Exec("UPDATE categories SET name = ?, description = ?, updated_at = ? WHERE id = ?",
+		req.Name, req.Description, time.Now(), id,
 	).Find(&response).Error
 
 	if err != nil {

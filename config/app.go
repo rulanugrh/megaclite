@@ -8,8 +8,19 @@ import (
 
 type App struct {
 	Server struct {
-		Port string
-		Host string
+		Port   string
+		Host   string
+		Secret string
+	}
+
+	Administrator struct {
+		Email    string
+		Password string
+	}
+
+	Dummy struct {
+		Email    string
+		Password string
 	}
 
 	Database struct {
@@ -53,6 +64,15 @@ func initConfig() *App {
 		// Adding server host and port config default
 		conf.Server.Host = "localhost"
 		conf.Server.Port = "3000"
+		conf.Server.Secret = "HelloWorldThisIsAdministrator"
+
+		// Adding administrator default config
+		conf.Administrator.Email = "admin@admin.com"
+		conf.Administrator.Password = "123456789"
+
+		// Adding dummy user default config
+		conf.Dummy.Email = "kyora@megaclite.com"
+		conf.Dummy.Password = "123456789"
 		return &conf
 	}
 
@@ -68,6 +88,13 @@ func initConfig() *App {
 	conf.Server.Host = os.Getenv("SERVER_HOST")
 	conf.Server.Port = os.Getenv("SERVER_PORT")
 
+	conf.Administrator.Email = os.Getenv("ADMINISTRATOR_EMAIL")
+	conf.Administrator.Password = os.Getenv("ADMINISTRATOR_PASSWORD")
+
+	conf.Dummy.Email = os.Getenv("DUMMYUSER_EMAIL")
+	conf.Dummy.Password = os.Getenv("DUMMYUSER_PASSWORD")
+
+	conf.Server.Secret = os.Getenv("SERVER_SECRET")
 	return &conf
 
 }

@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type Category struct {
 	gorm.Model
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name          string      `json:"name"`
+	Description   string      `json:"description"`
+	ListMailLabel []MailLabel `json:"mail_label" form:"mail_label" gorm:"many2many:mail_label_megaclite"`
 }
 
 type CategoryRegister struct {

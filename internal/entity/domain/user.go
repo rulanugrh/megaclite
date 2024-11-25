@@ -6,7 +6,7 @@ type User struct {
 	gorm.Model
 	Username string `gorm:"type:varchar(50)"`
 	Email    string `gorm:"type:varchar(50)"`
-	Password []byte
+	Password string `gorm:"type:varchar(256)"`
 	Avatar   string `gorm:"type:varchar(200)"`
 	Address  string `gorm:"type:text"`
 }

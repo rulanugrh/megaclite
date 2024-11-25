@@ -24,22 +24,23 @@ func NewUserRepository(config config.Database) UserInterface {
 }
 func (u *user) Register(req domain.Register) (*domain.User, error) {
 	var response domain.User
-	find := u.connection.DB.Exec("SELECT * FROM users WHERE email = ?", req.Email)
-	if find.RowsAffected > 0 {
+	find := u.connection.DB.Raw("SELECT * FROM users WHERE email = ?", req.Email).Scan(&response)
+	if find.RowsAffected != 0 {
 		return nil, web.InternalServerError("Sorry email has been taken")
 	}
 
-	err := u.connection.DB.Exec("INSERT INTO users(username, email, password) VALUES (?,?,?)",
-		req.Username,
-		req.Email,
-		req.Password,
-	).Find(&response).Error
+	request := domain.User{
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+	}
 
+	err := u.connection.DB.Create(&request).Error
 	if err != nil {
 		return nil, web.InternalServerError("Cannot save data user to Database")
 	}
 
-	return &response, nil
+	return &request, nil
 }
 
 func (u *user) Login(req domain.Login) (*domain.User, error) {
