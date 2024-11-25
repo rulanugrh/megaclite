@@ -4,13 +4,13 @@ services:
   db-app:
     container_name: database-megaclite
     hostname: db-app
-    image: postgres:alpine
+    image: mysql:8.0.40
     environtment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASS}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASS}
     ports:
-      - ${DATABASE_PORT}:5432
+      - ${DATABASE_PORT}:3306
     networks:
       - internals
       

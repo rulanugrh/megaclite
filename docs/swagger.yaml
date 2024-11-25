@@ -1,0 +1,146 @@
+basePath: /api/
+definitions:
+  domain.Category:
+    type: object
+  domain.Login:
+    properties:
+      email:
+        type: string
+      password:
+        items:
+          type: integer
+        type: array
+    required:
+    - email
+    - password
+    type: object
+  domain.Mail:
+    type: object
+  domain.MailLabel:
+    type: object
+  domain.Register:
+    properties:
+      email:
+        type: string
+      password:
+        items:
+          type: integer
+        type: array
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+host: localhost:4000
+info:
+  contact:
+    email: rulanugrh@proton.me
+    name: Kyora
+    url: https://github.com/rulanugrh
+  description: Documentation for API OpenPGP with HTMX
+  license:
+    name: MIT
+  termsOfService: https://swagger.io/terms
+  title: Megaclite API Documentation
+  version: "1.0"
+paths:
+  /api/label/add:
+    post:
+      consumes:
+      - application/json
+      operationId: adding
+      parameters:
+      - description: body request for add label mail
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.MailLabel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: add mail to label
+      tags:
+      - labelings
+  /api/label/find/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: findByID
+      parameters:
+      - description: id label
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: find label by id
+      tags:
+      - labelings
+  /api/user/register:
+    post:
+      consumes:
+      - application/json
+      operationId: register
+      parameters:
+      - description: request body for new user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Register'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: register new account
+      tags:
+      - users
+swagger: "2.0"

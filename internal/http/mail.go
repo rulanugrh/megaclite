@@ -84,7 +84,7 @@ func (m *mail) GetAll(c *fiber.Ctx) error {
 // @Tags mails
 // @Accept json
 // @Produce json
-// @Param id int path true "id mail"
+// @Param id path int true "id mail"
 // @Route /api/mail/find/{id} [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response

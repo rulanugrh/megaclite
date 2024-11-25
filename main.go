@@ -13,6 +13,19 @@ import (
 	"github.com/rulanugrh/megaclite/internal/service"
 )
 
+// @title Megaclite API Documentation
+// @version 1.0
+// @description Documentation for API OpenPGP with HTMX
+// @termsOfService https://swagger.io/terms
+
+// @contact.name Kyora
+// @contact.url https://github.com/rulanugrh
+// @contact.email rulanugrh@proton.me
+
+// @license.name MIT
+// @host localhost:4000
+// @BasePath /api/
+// @securityDefinition.basic BasicAuth
 func main() {
 	// Initialize PGP
 	pgp := crypto.PGP()
