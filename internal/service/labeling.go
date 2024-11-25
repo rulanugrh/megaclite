@@ -8,7 +8,7 @@ import (
 )
 
 type LabelingInterface interface {
-	Create(req domain.MailLabel) (*web.GetMailLabel, error)
+	Create(req domain.MailLabelRegister) (*web.GetMailLabel, error)
 	FindByID(id uint) (*web.GetMailLabel, error)
 	FindByCategory(id uint, userID uint) (*[]web.GetMailLabel, error)
 	UpdateLabel(id uint, categoryID uint) (*web.GetMailLabel, error)
@@ -26,7 +26,7 @@ func NewLabelMailService(repository repository.LabelInterface) LabelingInterface
 	}
 }
 
-func (l *labeling) Create(req domain.MailLabel) (*web.GetMailLabel, error) {
+func (l *labeling) Create(req domain.MailLabelRegister) (*web.GetMailLabel, error) {
 	err := l.validation.Validate(req)
 	if err != nil {
 		return nil, l.validation.ValidationMessage(err)

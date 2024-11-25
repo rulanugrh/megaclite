@@ -1,31 +1,79 @@
 basePath: /api/
 definitions:
-  domain.Category:
+  domain.CategoryRegister:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - description
+    - name
+    type: object
+  domain.CategoryUpdate:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - description
+    - name
     type: object
   domain.Login:
     properties:
       email:
         type: string
       password:
-        items:
-          type: integer
-        type: array
+        type: string
     required:
     - email
     - password
     type: object
-  domain.Mail:
+  domain.MailLabelRegister:
+    properties:
+      category_id:
+        type: integer
+      mail_id:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - category_id
+    - mail_id
+    - user_id
     type: object
-  domain.MailLabel:
+  domain.MailRegister:
+    properties:
+      attachment:
+        items:
+          type: string
+        type: array
+      from:
+        type: string
+      message:
+        type: string
+      star:
+        type: boolean
+      subtitle:
+        type: string
+      title:
+        type: string
+      to:
+        type: string
+    required:
+    - from
+    - message
+    - subtitle
+    - title
+    - to
     type: object
   domain.Register:
     properties:
       email:
         type: string
       password:
-        items:
-          type: integer
-        type: array
+        type: string
       username:
         type: string
     required:
@@ -65,7 +113,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/domain.MailLabel'
+          $ref: '#/definitions/domain.MailLabelRegister'
       produces:
       - application/json
       responses:

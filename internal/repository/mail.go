@@ -7,7 +7,7 @@ import (
 )
 
 type MailInterface interface {
-	Create(req domain.Mail) (*domain.Mail, error)
+	Create(req domain.MailRegister) (*domain.Mail, error)
 	Get(id uint) (*domain.Mail, error)
 	Delete(id uint) error
 	GetAll(from string) (*[]domain.Mail, error)
@@ -23,7 +23,7 @@ func NewMailRepository(conn config.Database) MailInterface {
 	}
 }
 
-func (m *mail) Create(req domain.Mail) (*domain.Mail, error) {
+func (m *mail) Create(req domain.MailRegister) (*domain.Mail, error) {
 	var response domain.Mail
 	err := m.connection.DB.Exec("INSERT INTO mails(from, to, message, title, subtitle) VALUES (?, ?, ?, ?, ?)",
 		req.From,

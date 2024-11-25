@@ -30,14 +30,14 @@ func NewCategoryHandler(service service.CategoryInterface) CategoryInterface {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param request body domain.Category true "request body for create new category"
+// @Param request body domain.CategoryRegister true "request body for create new category"
 // @Route /api/category/create [post]
 // @Success 201 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
 func (ct *category) Create(c *fiber.Ctx) error {
 	// parsing request to body parser
-	var request domain.Category
+	var request domain.CategoryRegister
 	err := c.BodyParser(&request)
 	// checking error while request body parser
 	if err != nil {
@@ -90,7 +90,7 @@ func (ct *category) Delete(c *fiber.Ctx) error {
 // @Tags categories
 // @Accept json
 // @Produce json
-// @Param request body domain.Category true "request body for updated data"
+// @Param request body domain.CategoryUpdate true "request body for updated data"
 // @Param id path int true "id category"
 // @Route /api/category/update/{id} [put]
 // @Success 200 {object} web.Response
@@ -98,7 +98,7 @@ func (ct *category) Delete(c *fiber.Ctx) error {
 // @Failure 500 {object} web.Response
 func (ct *category) Update(c *fiber.Ctx) error {
 	// parsing body request to entity
-	var request domain.Category
+	var request domain.CategoryUpdate
 	err := c.BodyParser(&request)
 	// check error after parsing body request
 	if err != nil {

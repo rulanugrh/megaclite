@@ -43,7 +43,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.MailLabel"
+                            "$ref": "#/definitions/domain.MailLabelRegister"
                         }
                     }
                 ],
@@ -161,8 +161,35 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Category": {
-            "type": "object"
+        "domain.CategoryRegister": {
+            "type": "object",
+            "required": [
+                "description",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CategoryUpdate": {
+            "type": "object",
+            "required": [
+                "description",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         },
         "domain.Login": {
             "type": "object",
@@ -175,18 +202,64 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 }
             }
         },
-        "domain.Mail": {
-            "type": "object"
+        "domain.MailLabelRegister": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "mail_id",
+                "user_id"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "mail_id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
         },
-        "domain.MailLabel": {
-            "type": "object"
+        "domain.MailRegister": {
+            "type": "object",
+            "required": [
+                "from",
+                "message",
+                "subtitle",
+                "title",
+                "to"
+            ],
+            "properties": {
+                "attachment": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "from": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "star": {
+                    "type": "boolean"
+                },
+                "subtitle": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                }
+            }
         },
         "domain.Register": {
             "type": "object",
@@ -200,10 +273,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
+                    "type": "string"
                 },
                 "username": {
                     "type": "string"

@@ -8,8 +8,8 @@ import (
 )
 
 type CategoryInterface interface {
-	Create(req domain.Category) (*web.Category, error)
-	Update(id uint, req domain.Category) (*web.Category, error)
+	Create(req domain.CategoryRegister) (*web.Category, error)
+	Update(id uint, req domain.CategoryUpdate) (*web.Category, error)
 	Delete(id uint) error
 }
 
@@ -25,7 +25,7 @@ func NewCategoryService(repository repository.CategoryInterface) CategoryInterfa
 	}
 }
 
-func (c *category) Create(req domain.Category) (*web.Category, error) {
+func (c *category) Create(req domain.CategoryRegister) (*web.Category, error) {
 	err := c.validation.Validate(req)
 	if err != nil {
 		return nil, c.validation.ValidationMessage(err)
@@ -44,7 +44,7 @@ func (c *category) Create(req domain.Category) (*web.Category, error) {
 	return &response, nil
 }
 
-func (c *category) Update(id uint, req domain.Category) (*web.Category, error) {
+func (c *category) Update(id uint, req domain.CategoryUpdate) (*web.Category, error) {
 	data, err := c.repository.Update(id, req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())

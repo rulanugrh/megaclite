@@ -8,7 +8,7 @@ import (
 )
 
 type MailInterface interface {
-	Create(req domain.Mail) (*web.GetDetailMail, error)
+	Create(req domain.MailRegister) (*web.GetDetailMail, error)
 	FindByID(id uint) (*web.GetDetailMail, error)
 	Delete(id uint) error
 	Get(from string) (*[]web.GetDetailMail, error)
@@ -26,7 +26,7 @@ func NewMailService(repository repository.MailInterface) MailInterface {
 	}
 }
 
-func (m *mail) Create(req domain.Mail) (*web.GetDetailMail, error) {
+func (m *mail) Create(req domain.MailRegister) (*web.GetDetailMail, error) {
 	err := m.validation.Validate(req)
 	if err != nil {
 		return nil, m.validation.ValidationMessage(err)

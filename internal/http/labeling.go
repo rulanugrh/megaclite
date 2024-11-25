@@ -31,14 +31,14 @@ func NewLabelMailHandler(service service.LabelingInterface) LabelingInterface {
 // @Tags labelings
 // @Accept json
 // @Produce json
-// @Param request body domain.MailLabel true "body request for add label mail"
+// @Param request body domain.MailLabelRegister true "body request for add label mail"
 // @Router /api/label/add [post]
 // @Success 201 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
 func (l *labeling) Create(c *fiber.Ctx) error {
 	// Parsing request to body parse
-	var request domain.MailLabel
+	var request domain.MailLabelRegister
 	// Checking error while parser request
 	err := c.BodyParser(&request)
 	if err != nil {
@@ -129,7 +129,7 @@ func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 // @Tags labelings
 // @Accept json
 // @Produce json
-// @Param request body domain.MailLabel true "request body for update label"
+// @Param request body domain.MailLabelRegister true "request body for update label"
 // @Param id path int true "parameter id"
 // @Route /api/label/update/{id} [put]
 // @Success 200 {object} web.Response
@@ -137,7 +137,7 @@ func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 // @Failure 500 {object} web.Response
 func (l *labeling) UpdateLabel(c *fiber.Ctx) error {
 	// parsng request to body parser
-	var request domain.MailLabel
+	var request domain.MailLabelRegister
 	// checking error while parsing request
 	err := c.BodyParser(&request)
 	if err != nil {

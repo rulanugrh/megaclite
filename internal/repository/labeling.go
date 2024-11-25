@@ -7,7 +7,7 @@ import (
 )
 
 type LabelInterface interface {
-	Create(req domain.MailLabel) (*domain.MailLabel, error)
+	Create(req domain.MailLabelRegister) (*domain.MailLabel, error)
 	Get(id uint) (*domain.MailLabel, error)
 	UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error)
 	GetByCategory(categoryID uint, userID uint) (*[]domain.MailLabel, error)
@@ -23,7 +23,7 @@ func NewLabelMailRepository(config config.Database) LabelInterface {
 	}
 }
 
-func (l *label) Create(req domain.MailLabel) (*domain.MailLabel, error) {
+func (l *label) Create(req domain.MailLabelRegister) (*domain.MailLabel, error) {
 	var response domain.MailLabel
 	err := l.connection.DB.Exec("INSERT INTO mail_labels(category_id, user_id, mail_id) VALUES (?,?,?)",
 		req.CategoryID,

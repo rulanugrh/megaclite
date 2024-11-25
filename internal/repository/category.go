@@ -7,8 +7,8 @@ import (
 )
 
 type CategoryInterface interface {
-	Create(req domain.Category) (*domain.Category, error)
-	Update(id uint, req domain.Category) (*domain.Category, error)
+	Create(req domain.CategoryRegister) (*domain.Category, error)
+	Update(id uint, req domain.CategoryUpdate) (*domain.Category, error)
 	Delete(id uint) error
 }
 
@@ -22,7 +22,7 @@ func NewCategoryRepository(config config.Database) CategoryInterface {
 	}
 }
 
-func (c *category) Create(req domain.Category) (*domain.Category, error) {
+func (c *category) Create(req domain.CategoryRegister) (*domain.Category, error) {
 	var response domain.Category
 
 	err := c.connection.DB.Exec("INSERT INTO categories(name, description) VALUES(?,?)",
@@ -37,7 +37,7 @@ func (c *category) Create(req domain.Category) (*domain.Category, error) {
 	return &response, nil
 }
 
-func (c *category) Update(id uint, req domain.Category) (*domain.Category, error) {
+func (c *category) Update(id uint, req domain.CategoryUpdate) (*domain.Category, error) {
 	var response domain.Category
 
 	err := c.connection.DB.Exec("UPDATE categories SET name = ?, description = ? WHERE id = ?",

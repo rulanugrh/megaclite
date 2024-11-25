@@ -31,14 +31,14 @@ func NewMailHandler(service service.MailInterface) MailInterface {
 // @Tags mails
 // @Accept json
 // @Produce json
-// @Param request body domain.Mail true "request body for create mail"
+// @Param request body domain.MailRegister true "request body for create mail"
 // @Route /api/mail/create [post]
 // @Success 200 {object} web.Response
 // @Failure 500 {object} web.Response
 // @Failure 400 {object} web.Response
 func (m *mail) Create(c *fiber.Ctx) error {
 	// parser body request to entity
-	var request domain.Mail
+	var request domain.MailRegister
 	err := c.BodyParser(&request)
 	// check error if have error while create data
 	if err != nil {
