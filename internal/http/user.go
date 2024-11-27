@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 )
 
@@ -17,12 +18,14 @@ type UserInterface interface {
 }
 
 type user struct {
-	service service.UserInterface
+	service    service.UserInterface
+	middleware middleware.JWTInterface
 }
 
 func NewUserHandler(service service.UserInterface) UserInterface {
 	return &user{
-		service: service,
+		service:    service,
+		middleware: middleware.NewJWTToken(),
 	}
 }
 
@@ -90,7 +93,12 @@ func (u *user) Login(c *fiber.Ctx) error {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}
 
-	return c.Status(201).JSON(web.Success("Success login into account", data))
+	token, err := u.middleware.GenerateToken(*data)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
+
+	return c.Status(201).JSON(web.Success("Success login into account", token))
 }
 
 // @Summary get user by emails
@@ -104,9 +112,13 @@ func (u *user) Login(c *fiber.Ctx) error {
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
 func (u *user) Get(c *fiber.Ctx) error {
-	emails := c.Params("emails")
+	getToken := c.Get("Authorization")
+	email, err := u.middleware.GetEmail(getToken)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
 
-	data, err := u.service.GetEmail(emails)
+	data, err := u.service.GetEmail(*email)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

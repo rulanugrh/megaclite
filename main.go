@@ -89,7 +89,7 @@ func application(mail handler.MailInterface, user handler.UserInterface, categor
 	// Route Group for Mail Handler
 	mailRoutes := app.Group("/api/mail")
 	mailRoutes.Post("/", mail.Create)
-	mailRoutes.Get("/:id", mail.GetByID)
+	mailRoutes.Get("/find/:id", mail.GetByID)
 	mailRoutes.Get("/getall", mail.GetAll)
 	mailRoutes.Delete("/delete/:id", mail.GetByID)
 

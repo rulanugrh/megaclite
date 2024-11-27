@@ -36,9 +36,9 @@ func (v *Validation) ValidationMessage(err error) error {
 	for _, e := range err.(validator.ValidationErrors) {
 		switch e.Tag() {
 		case "required":
-			msg = fmt.Sprintf("This field is required")
+			msg = fmt.Sprintf("This field is required: %v", e.Field())
 		case "email":
-			msg = fmt.Sprintf("This field must be email format")
+			msg = fmt.Sprintf("This field must be email format: %s", e.Field())
 		}
 	}
 

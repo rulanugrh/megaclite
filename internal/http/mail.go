@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 )
 
@@ -17,12 +18,14 @@ type MailInterface interface {
 }
 
 type mail struct {
-	service service.MailInterface
+	service    service.MailInterface
+	middleware middleware.JWTInterface
 }
 
 func NewMailHandler(service service.MailInterface) MailInterface {
 	return &mail{
-		service: service,
+		service:    service,
+		middleware: middleware.NewJWTToken(),
 	}
 }
 
@@ -37,9 +40,16 @@ func NewMailHandler(service service.MailInterface) MailInterface {
 // @Failure 500 {object} web.Response
 // @Failure 400 {object} web.Response
 func (m *mail) Create(c *fiber.Ctx) error {
+	getToken := c.Get("Authorization")
+	email, err := m.middleware.GetEmail(getToken)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
+
 	// parser body request to entity
 	var request domain.MailRegister
-	err := c.BodyParser(&request)
+	request.From = *email
+	err = c.BodyParser(&request)
 	// check error if have error while create data
 	if err != nil {
 		return c.Status(500).JSON(web.InternalServerError("Error while parsing request"))
@@ -67,10 +77,14 @@ func (m *mail) Create(c *fiber.Ctx) error {
 // @Failure 500 {object} web.Response
 func (m *mail) GetAll(c *fiber.Ctx) error {
 	// get email from parameter
-	user := c.Params("user")
+	getToken := c.Get("Authorization")
+	email, err := m.middleware.GetEmail(getToken)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
 
 	// process get data from email parameter
-	data, err := m.service.Get(user)
+	data, err := m.service.Get(*email)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

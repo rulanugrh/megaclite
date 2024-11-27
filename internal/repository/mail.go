@@ -66,7 +66,7 @@ func (m *mail) Delete(id uint) error {
 
 func (m *mail) GetAll(from string) (*[]domain.Mail, error) {
 	var response []domain.Mail
-	err := m.connection.DB.Raw("SELECT * FROM mails WHERE from = ?", from).Scan(&response).Error
+	err := m.connection.DB.Raw("SELECT * FROM mails WHERE `from` = ? OR `to` = ?", from, from).Scan(&response).Error
 	if err != nil {
 		return nil, web.InternalServerError("Cannot get all mail with this email")
 	}

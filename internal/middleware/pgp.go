@@ -15,7 +15,7 @@ type PGPInterface interface {
 	Encryption(req domain.MailRegister) ([]byte, error)
 	Decryption(req domain.Mail) ([]byte, error)
 	GenerateKeygen(req domain.Register) (*web.PGPResponse, error)
-	VerificationKey(private string) (bool, error)
+	VerificationKey(private string) (*string, bool, error)
 }
 
 type pgp struct {
@@ -91,33 +91,36 @@ func (p *pgp) GenerateKeygen(req domain.Register) (*web.PGPResponse, error) {
 	}, nil
 }
 
-func (p *pgp) VerificationKey(private string) (bool, error) {
+func (p *pgp) VerificationKey(private string) (*string, bool, error) {
 	privateKey, err := crypto.NewKeyFromArmored(private)
 	if err != nil {
-		return false, web.InternalServerError("Cannot get private key")
+		return nil, false, web.InternalServerError("Cannot get private key")
 	}
+
+	privateKey.GetHexKeyID()
 
 	encryption, err := p.utils.Encryption().Recipient(privateKey).New()
 	if err != nil {
-		return false, web.InternalServerError("cannot handle encryption with this key")
+		return nil, false, web.InternalServerError("cannot handle encryption with this key")
 	}
 
 	message, _ := encryption.Encrypt([]byte(p.conf.Server.Secret))
 	armored, err := message.ArmorBytes()
 	if err != nil {
-		return false, web.InternalServerError("Cannot get secret")
+		return nil, false, web.InternalServerError("Cannot get secret")
 	}
 
-	verify, err := p.utils.Decryption().DecryptionKey(privateKey).New()
+	verify, _ := p.utils.Decryption().DecryptionKey(privateKey).New()
 	decrypt, err := verify.Decrypt(armored, crypto.Armor)
 	if err != nil {
-		return false, web.InternalServerError("Cannot verify secret message with this key")
+		return nil, false, web.InternalServerError("Cannot verify secret message with this key")
 	}
 
 	msg := decrypt.Bytes()
 	if !bytes.Equal(msg, []byte(p.conf.Server.Secret)) {
-		return false, web.BadRequest("Sorry secret mot matched")
+		return nil, false, web.BadRequest("Sorry secret mot matched")
 	}
 
-	return true, nil
+	id := privateKey.GetHexKeyID()
+	return &id, true, nil
 }

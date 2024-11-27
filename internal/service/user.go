@@ -12,7 +12,7 @@ import (
 
 type UserInterface interface {
 	Register(req domain.Register) (*web.PGPResponse, error)
-	Login(req domain.Login, private string) (*web.GetUser, error)
+	Login(req domain.Login, private string) (*web.ResponseLogin, error)
 	GetEmail(email string) (*web.GetUser, error)
 	GetByID(id uint) (*web.GetUser, error)
 }
@@ -66,7 +66,7 @@ func (u *user) Register(req domain.Register) (*web.PGPResponse, error) {
 	return &response, nil
 }
 
-func (u *user) Login(req domain.Login, private string) (*web.GetUser, error) {
+func (u *user) Login(req domain.Login, private string) (*web.ResponseLogin, error) {
 	err := u.validation.Validate(req)
 	if err != nil {
 		return nil, u.validation.ValidationMessage(err)
@@ -82,15 +82,15 @@ func (u *user) Login(req domain.Login, private string) (*web.GetUser, error) {
 		return nil, web.BadRequest("Sorry password not matched")
 	}
 
-	check, err := u.middleware.VerificationKey(private)
+	id, check, err := u.middleware.VerificationKey(private)
 	if !check && err != nil {
 		return nil, web.BadRequest("Sorry secret message and keygen not matched")
 	}
 
-	response := web.GetUser{
-		Username: data.Username,
-		Email:    data.Email,
-		Address:  data.Address,
+	response := web.ResponseLogin{
+		KeyID:  *id,
+		UserID: data.ID,
+		Email:  data.Email,
 	}
 
 	return &response, nil

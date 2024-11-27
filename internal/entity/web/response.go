@@ -6,8 +6,22 @@ type GetUser struct {
 	Address  string `json:"address"`
 }
 
+type ResponseLogin struct {
+	KeyID  string `json:"key_id"`
+	UserID uint   `json:"user_id"`
+	Email  string `json:"email"`
+}
+
 type GetDetailMail struct {
 	Message  string `json:"msg"`
+	From     string `json:"from"`
+	To       string `json:"to"`
+	Title    string `json:"title"`
+	Subtitle string `json:"subtitle"`
+}
+
+type GetMail struct {
+	ID       uint   `json:"id"`
 	From     string `json:"from"`
 	To       string `json:"to"`
 	Title    string `json:"title"`

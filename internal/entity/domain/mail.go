@@ -27,7 +27,7 @@ type MailLabel struct {
 }
 
 type MailRegister struct {
-	From       string   `json:"from" form:"from" validate:"required"`
+	From       string   `json:"from" form:"from"`
 	To         string   `json:"to" form:"to" validate:"required"`
 	Message    string   `json:"message" form:"message" validate:"required"`
 	Title      string   `json:"title" form:"title" validate:"required"`
