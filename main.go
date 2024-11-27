@@ -51,7 +51,7 @@ func main() {
 
 	// Initialize Mail Komponen
 	mailRepository := repository.NewMailRepository(*connectionDB)
-	mailService := service.NewMailService(mailRepository)
+	mailService := service.NewMailService(mailRepository, middleware)
 	mailHandler := handler.NewMailHandler(mailService)
 
 	// Initialize Category Komponen

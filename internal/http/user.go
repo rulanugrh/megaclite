@@ -49,9 +49,9 @@ func (u *user) Register(c *fiber.Ctx) error {
 	}
 
 	c.Set("Content-Type", "text/plain")
-	c.Set("Content-Disposition", "attachment; filename="+"keygen.asc")
+	c.Set("Content-Disposition", "attachment; filename="+"keygen.pgp")
 
-	return c.Status(201).Send(data.Key)
+	return c.Status(201).Send([]byte(data.Private))
 }
 
 // @Summary login user
@@ -85,7 +85,7 @@ func (u *user) Login(c *fiber.Ctx) error {
 		log.Println("Cannot read content file")
 	}
 
-	data, err := u.service.Login(request, content)
+	data, err := u.service.Login(request, string(content))
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

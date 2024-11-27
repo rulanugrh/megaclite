@@ -27,7 +27,7 @@ func NewMailRepository(conn config.Database) MailInterface {
 
 func (m *mail) Create(req domain.MailRegister) (*domain.Mail, error) {
 	var response domain.Mail
-	err := m.connection.DB.Exec("INSERT INTO mails(created_at, updated_at, from, to, message, title, subtitle) VALUES (?, ?, ?, ?, ?, ?, ?)",
+	err := m.connection.DB.Exec("INSERT INTO mails(created_at, updated_at, `from`, `to`, message, title, subtitle) VALUES(?, ?, ?, ?, ?, ?, ?)",
 		time.Now(),
 		time.Now(),
 		req.From,
@@ -35,7 +35,7 @@ func (m *mail) Create(req domain.MailRegister) (*domain.Mail, error) {
 		req.Message,
 		req.Title,
 		req.Subtitle,
-	).First(&response).Error
+	).Find(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("Cannot create mail")

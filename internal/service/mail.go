@@ -17,12 +17,14 @@ type MailInterface interface {
 type mail struct {
 	repository repository.MailInterface
 	validation middleware.IValidation
+	pgp        middleware.PGPInterface
 }
 
-func NewMailService(repository repository.MailInterface) MailInterface {
+func NewMailService(repository repository.MailInterface, pgp middleware.PGPInterface) MailInterface {
 	return &mail{
 		repository: repository,
 		validation: middleware.NewValidation(),
+		pgp:        pgp,
 	}
 }
 
@@ -32,7 +34,22 @@ func (m *mail) Create(req domain.MailRegister) (*web.GetDetailMail, error) {
 		return nil, m.validation.ValidationMessage(err)
 	}
 
-	data, err := m.repository.Create(req)
+	encrypt, err := m.pgp.Encryption(req)
+	if err != nil {
+		return nil, web.InternalServerError("Error While Encryption Message")
+	}
+
+	request := domain.MailRegister{
+		From:       req.From,
+		To:         req.To,
+		Title:      req.Title,
+		Message:    string(encrypt),
+		Subtitle:   req.Subtitle,
+		Star:       req.Star,
+		Attachment: req.Attachment,
+	}
+
+	data, err := m.repository.Create(request)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
@@ -41,7 +58,7 @@ func (m *mail) Create(req domain.MailRegister) (*web.GetDetailMail, error) {
 		From:     data.From,
 		To:       data.To,
 		Title:    data.Title,
-		Message:  data.Message,
+		Message:  req.Message,
 		Subtitle: data.Subtitle,
 	}
 
@@ -54,11 +71,16 @@ func (m *mail) FindByID(id uint) (*web.GetDetailMail, error) {
 		return nil, web.InternalServerError(err.Error())
 	}
 
+	decryption, err := m.pgp.Decryption(*data)
+	if err != nil {
+		return nil, web.InternalServerError("Error while decryption message")
+	}
+
 	response := web.GetDetailMail{
 		From:     data.From,
 		To:       data.To,
 		Title:    data.Title,
-		Message:  data.Message,
+		Message:  string(decryption),
 		Subtitle: data.Subtitle,
 	}
 

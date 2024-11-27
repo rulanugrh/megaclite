@@ -12,7 +12,7 @@ import (
 
 type UserInterface interface {
 	Register(req domain.Register) (*web.PGPResponse, error)
-	Login(req domain.Login, key []byte) (*web.GetUser, error)
+	Login(req domain.Login, private string) (*web.GetUser, error)
 	GetEmail(email string) (*web.GetUser, error)
 	GetByID(id uint) (*web.GetUser, error)
 }
@@ -53,21 +53,20 @@ func (u *user) Register(req domain.Register) (*web.PGPResponse, error) {
 		return nil, web.InternalServerError(err.Error())
 	}
 
-	key, err := u.middleware.Encryption(req)
+	key, err := u.middleware.GenerateKeygen(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
 
 	response := web.PGPResponse{
-		Key:      key,
+		Private:  key.Private,
 		Username: data.Username,
-		Email:    data.Email,
 	}
 
 	return &response, nil
 }
 
-func (u *user) Login(req domain.Login, key []byte) (*web.GetUser, error) {
+func (u *user) Login(req domain.Login, private string) (*web.GetUser, error) {
 	err := u.validation.Validate(req)
 	if err != nil {
 		return nil, u.validation.ValidationMessage(err)
@@ -83,7 +82,7 @@ func (u *user) Login(req domain.Login, key []byte) (*web.GetUser, error) {
 		return nil, web.BadRequest("Sorry password not matched")
 	}
 
-	check, err := u.middleware.Decryption(*data, key)
+	check, err := u.middleware.VerificationKey(private)
 	if !check && err != nil {
 		return nil, web.BadRequest("Sorry secret message and keygen not matched")
 	}

@@ -29,7 +29,6 @@ type Category struct {
 }
 
 type PGPResponse struct {
-	Key      []byte `json:"key"`
+	Private  string `json:"private_key"`
 	Username string `json:"username"`
-	Email    string `json:"email"`
 }
