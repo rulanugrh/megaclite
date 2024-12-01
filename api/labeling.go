@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"strconv"
@@ -20,7 +20,7 @@ type labeling struct {
 	service service.LabelingInterface
 }
 
-func NewLabelMailHandler(service service.LabelingInterface) LabelingInterface {
+func NewLabelMailAPI(service service.LabelingInterface) LabelingInterface {
 	return &labeling{
 		service: service,
 	}

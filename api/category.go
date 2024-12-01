@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"strconv"
@@ -19,7 +19,7 @@ type category struct {
 	service service.CategoryInterface
 }
 
-func NewCategoryHandler(service service.CategoryInterface) CategoryInterface {
+func NewCategoryAPI(service service.CategoryInterface) CategoryInterface {
 	return &category{
 		service: service,
 	}

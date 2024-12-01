@@ -1,0 +1,52 @@
+package view
+import (
+    "github.com/gofiber/fiber/v2"
+	"github.com/rulanugrh/megaclite/view/partials"
+)
+
+templ Layout(page string, msg fiber.Map, isError bool) {
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<meta
+				name="description"
+				content="Full stack application about Implement PGP with Golang + MySQL and user HTMX as Frontend"
+			/>
+			<meta name="google" content="notranslate"/>
+			<link rel="shortcut icon" href="/img/gopher-svgrepo-com.svg" type="image/svg+xml"/>
+			<link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
+			<link rel="stylesheet" href="/assets/css/styles.css">
+			<title>{ page }</title>
+			<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
+			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
+			<script src="https://cdn.tailwindcss.com"></script>
+			<script>
+				tailwind.config = {
+					theme: {
+						extend: {
+							colors: {
+								clifford: '#da373d',
+							},
+							container: {
+								center: true,
+								padding: "16px"
+							},
+							fontFamily: {
+								jetBrains: "'JetBrains Mono', serif"
+							}
+						}
+					}
+				}
+			</script>
+        </head>
+		<body>
+			<main class={ templ.KV("pt-40", !isError) }>
+				{ children... }
+				@partials.FlashMessages(msg)
+			</main>
+		</body>
+    </html>
+}

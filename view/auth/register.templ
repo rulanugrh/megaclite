@@ -1,0 +1,44 @@
+package auth
+
+import (
+    "github.com/gofiber/fiber/v2"
+    "github.com/rulanugrh/megaclite/view"
+)
+
+templ RegisterIndex() {
+    <section class="pt-32 pb-32">
+        <div class="max-w-7xl mx-auto">
+            <div class="container">
+                <form class="max-w-sm mx-auto" method="post" hx-swap="transition:true">
+                    <div class="mb-5">
+                        <label id="email" for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Email</label>
+                        <input type="email" id="email" name="email"
+                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 font-jetBrains focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                            placeholder="name@flowbite.com" required />
+                    </div>
+                    <div class="mb-5">
+                        <label id="username" for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Username</label>
+                        <input type="text" id="username" name="username"
+                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg font-jetBrains focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                            placeholder="Kyora" required />
+                    </div>
+                    <div class="mb-5">
+                        <label id="password" for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Password</label>
+                        <input type="password" id="password" name="password"
+                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg font-jetBrains focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                            minlength="8" required />
+                    </div>
+                    <button type="submit"
+                        class="text-white font-jetBrains bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register
+                        new account</button>
+                </form>
+            </div>
+        </div>
+    </section>
+}
+
+templ Register(page string, isError bool, msg fiber.Map, cmp templ.Component) {
+    @view.Layout(page, msg, isError) {
+        @cmp
+    }
+}

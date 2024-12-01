@@ -9,6 +9,7 @@ import (
 	"github.com/ProtonMail/gopenpgp/v3/crypto"
 	"github.com/ProtonMail/gopenpgp/v3/profile"
 	"github.com/gofiber/fiber/v2"
+	"github.com/rulanugrh/megaclite/api"
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	handler "github.com/rulanugrh/megaclite/internal/http"
@@ -47,22 +48,23 @@ func main() {
 	// Initialize User Komponen
 	userRepository := repository.NewUserRepository(*connectionDB)
 	userService := service.NewUserService(userRepository, middleware)
-	userHandler := handler.NewUserHandler(userService)
+	userAPI := api.NewUserAPI(userService)
+	userView := handler.NewUserView(userService)
 
 	// Initialize Mail Komponen
 	mailRepository := repository.NewMailRepository(*connectionDB)
 	mailService := service.NewMailService(mailRepository, middleware)
-	mailHandler := handler.NewMailHandler(mailService)
+	mailAPI := api.NewMailAPI(mailService)
 
 	// Initialize Category Komponen
 	categoryRepository := repository.NewCategoryRepository(*connectionDB)
 	categoryService := service.NewCategoryService(categoryRepository)
-	categoryHandler := handler.NewCategoryHandler(categoryService)
+	categoryAPI := api.NewCategoryAPI(categoryService)
 
 	// Initialize Labeling Komponen
 	labelingRepository := repository.NewLabelMailRepository(*connectionDB)
 	labelingService := service.NewLabelMailService(labelingRepository)
-	labelingHandler := handler.NewLabelMailHandler(labelingService)
+	labelingAPI := api.NewLabelMailAPI(labelingService)
 
 	app := fiber.New(fiber.Config{
 		AppName: "PGP with Golang",
@@ -77,35 +79,37 @@ func main() {
 		}
 	} else if args == "seed" {
 		seeder(db, *conf)
+	} else if args == "api" {
+		webAPI(mailAPI, userAPI, categoryAPI, labelingAPI, app, conf)
 	} else if args == "serve" {
-		application(mailHandler, userHandler, categoryHandler, labelingHandler, app, conf)
+		webView(userView, app, conf)
 	} else {
 		help_command()
 	}
 
 }
 
-func application(mail handler.MailInterface, user handler.UserInterface, category handler.CategoryInterface, labeling handler.LabelingInterface, app *fiber.App, config *config.App) {
-	// Route Group for Mail Handler
+func webAPI(mail api.MailInterface, user api.UserInterface, category api.CategoryInterface, labeling api.LabelingInterface, app *fiber.App, config *config.App) {
+	// Route Group for Mail API
 	mailRoutes := app.Group("/api/mail")
 	mailRoutes.Post("/", mail.Create)
 	mailRoutes.Get("/find/:id", mail.GetByID)
 	mailRoutes.Get("/getall", mail.GetAll)
 	mailRoutes.Delete("/delete/:id", mail.GetByID)
 
-	// Routing Handler for User
+	// Routing API for User
 	userRoutes := app.Group("/api/user")
 	userRoutes.Post("/register", user.Register)
 	userRoutes.Post("/login", user.Login)
 	userRoutes.Get("/:email", user.Get)
 
-	// Routing Handler For Category
+	// Routing API For Category
 	categoryRoutes := app.Group("/api/category")
 	categoryRoutes.Post("/", category.Create)
 	categoryRoutes.Delete("/:id", category.Delete)
 	categoryRoutes.Put("/:id", category.Update)
 
-	// Routing Handler For Labeling
+	// Routing API For Labeling
 	labelingRoutes := app.Group("/api/labeling")
 	labelingRoutes.Post("/", labeling.Create)
 	labelingRoutes.Get("/:categoryID/:user_id", labeling.FindByCategory)
@@ -113,12 +117,30 @@ func application(mail handler.MailInterface, user handler.UserInterface, categor
 	labelingRoutes.Put("/update/:id/:categoryID", labeling.UpdateLabel)
 
 	// Running Application
-	err := app.Listen(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port))
+	err := app.Listen(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.ApiPort))
 	if err != nil {
 		log.Fatal("Error while running server: " + err.Error())
 	}
 
-	log.Println("App running at: " + config.Server.Host + ":" + config.Server.Port)
+	log.Println("App running at: " + config.Server.Host + ":" + config.Server.ApiPort)
+}
+
+func webView(user handler.UserView, app *fiber.App, config *config.App) {
+	app.Static("/assets", "./view/assets")
+	// Views User
+	app.Get("/", user.RegisterView)
+	app.Post("/", user.RegisterView)
+	app.Get("/login", user.LoginView)
+	app.Post("/login", user.LoginView)
+
+	// Running Application
+	err := app.Listen(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.ViewPort))
+	if err != nil {
+		log.Fatal("Error while running server: " + err.Error())
+	}
+
+	log.Println("App running at: " + config.Server.Host + ":" + config.Server.ViewPort)
+
 }
 
 func seeder(db *gorm.DB, conf config.App) {
@@ -166,6 +188,7 @@ func help_command() {
 		{"help", "to show help message"},
 		{"migration", "to migration table into database"},
 		{"seed", "to seed dummy data into database"},
+		{"api", "to serve API"},
 		{"serve", "to serve application"},
 	}
 

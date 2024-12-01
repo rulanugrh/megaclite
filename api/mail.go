@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"strconv"
@@ -22,7 +22,7 @@ type mail struct {
 	middleware middleware.JWTInterface
 }
 
-func NewMailHandler(service service.MailInterface) MailInterface {
+func NewMailAPI(service service.MailInterface) MailInterface {
 	return &mail{
 		service:    service,
 		middleware: middleware.NewJWTToken(),

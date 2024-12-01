@@ -8,9 +8,10 @@ import (
 
 type App struct {
 	Server struct {
-		Port   string
-		Host   string
-		Secret string
+		ApiPort  string
+		Host     string
+		Secret   string
+		ViewPort string
 	}
 
 	Administrator struct {
@@ -63,7 +64,8 @@ func initConfig() *App {
 
 		// Adding server host and port config default
 		conf.Server.Host = "localhost"
-		conf.Server.Port = "3000"
+		conf.Server.ApiPort = "3000"
+		conf.Server.ViewPort = "8080"
 		conf.Server.Secret = "HelloWorldThisIsAdministrator"
 
 		// Adding administrator default config
@@ -86,7 +88,8 @@ func initConfig() *App {
 	conf.Observability.Port = os.Getenv("OTEL_PORT")
 
 	conf.Server.Host = os.Getenv("SERVER_HOST")
-	conf.Server.Port = os.Getenv("SERVER_PORT")
+	conf.Server.ApiPort = os.Getenv("SERVER_API_PORT")
+	conf.Server.ViewPort = os.Getenv("SERVER_VIEW_PORT")
 
 	conf.Administrator.Email = os.Getenv("ADMINISTRATOR_EMAIL")
 	conf.Administrator.Password = os.Getenv("ADMINISTRATOR_PASSWORD")

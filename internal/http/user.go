@@ -1,127 +1,147 @@
 package handler
 
 import (
-	"io"
 	"log"
 
+	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
-	"github.com/rulanugrh/megaclite/internal/entity/web"
-	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
+	"github.com/rulanugrh/megaclite/view/auth"
+	"github.com/sujit-baniya/flash"
 )
 
-type UserInterface interface {
-	Register(c *fiber.Ctx) error
-	Login(c *fiber.Ctx) error
-	Get(c *fiber.Ctx) error
+type UserView interface {
+	RegisterView(c *fiber.Ctx) error
+	LoginView(c *fiber.Ctx) error
+	HomeView(c *fiber.Ctx) error
 }
 
 type user struct {
-	service    service.UserInterface
-	middleware middleware.JWTInterface
+	service service.UserInterface
 }
 
-func NewUserHandler(service service.UserInterface) UserInterface {
+func NewUserView(service service.UserInterface) UserView {
 	return &user{
-		service:    service,
-		middleware: middleware.NewJWTToken(),
+		service: service,
 	}
 }
 
-// @Summary register new account
-// @ID register
-// @Tags users
-// @Accept json
-// @Produce json
-// @Param request body domain.Register true "request body for new user"
-// @Router /api/user/register [post]
-// @Success 201 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 500 {object} web.Response
-func (u *user) Register(c *fiber.Ctx) error {
-	var request domain.Register
-	err := c.BodyParser(&request)
-	if err != nil {
-		return c.Status(500).JSON(web.InternalServerError("Cannot parsing body request"))
+func (u *user) RegisterView(c *fiber.Ctx) error {
+	index := auth.RegisterIndex()
+	views := auth.Register("Register Account", false, flash.Get(c), index)
+
+	handler := adaptor.HTTPHandler(templ.Handler(views))
+
+	if c.Method() == "POST" {
+		request := domain.Register{
+			Username: c.FormValue("username"),
+			Password: c.FormValue("password"),
+			Email:    c.FormValue("email"),
+		}
+
+		data, err := u.service.Register(request)
+		if err != nil {
+			log.Println(err)
+			fm := fiber.Map{
+				"type":    "error",
+				"message": err.Error(),
+			}
+
+			return flash.WithError(c, fm).Redirect("/")
+		}
+
+		// Mengirim file JSON
+		c.Set("Content-Disposition", "attachment; filename=keygen.pgp")
+		c.Set("Content-Type", "text/plain")
+		c.Send([]byte(data.Private))
+
+		fm := fiber.Map{
+			"type":    "success",
+			"message": "Success Create Account",
+		}
+
+		return flash.WithSuccess(c, fm).Redirect("/login")
 	}
 
-	data, err := u.service.Register(request)
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
-	}
-
-	c.Set("Content-Type", "text/plain")
-	c.Set("Content-Disposition", "attachment; filename="+"keygen.pgp")
-
-	return c.Status(201).Send([]byte(data.Private))
+	return handler(c)
 }
 
-// @Summary login user
-// @ID login
-// @Tags users
-// @Accept json
-// @Produce json
-// @Param request body domain.Login true "request body for login existing account"
-// @Route /api/user/login [post]
-// @Succes 200 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 500 {object} web.Response
-func (u *user) Login(c *fiber.Ctx) error {
-	request := domain.Login{
-		Email:    c.FormValue("email"),
-		Password: c.FormValue("password"),
+func (u *user) LoginView(c *fiber.Ctx) error {
+	index := auth.RegisterIndex()
+	views := auth.Register("Register Account", false, flash.Get(c), index)
+
+	handler := adaptor.HTTPHandler(templ.Handler(views))
+
+	if c.Method() == "POST" {
+		request := domain.Register{
+			Username: c.FormValue("username"),
+			Password: c.FormValue("password"),
+			Email:    c.FormValue("email"),
+		}
+
+		data, err := u.service.Register(request)
+		if err != nil {
+			fm := fiber.Map{
+				"type":    "error",
+				"message": err.Error(),
+			}
+
+			return flash.WithError(c, fm).Redirect("/register")
+		}
+
+		fm := fiber.Map{
+			"type":    "success",
+			"message": "Success Create Account",
+			"data":    data.Private,
+		}
+
+		return flash.WithSuccess(c, fm).Redirect("/login")
 	}
 
-	file, err := c.FormFile("file")
-	if err != nil {
-		return c.Status(500).JSON(web.InternalServerError("Cannot read form file"))
-	}
-
-	read, err := file.Open()
-	if err != nil {
-		log.Println("Cannot open file request")
-	}
-
-	content, err := io.ReadAll(read)
-	if err != nil {
-		log.Println("Cannot read content file")
-	}
-
-	data, err := u.service.Login(request, string(content))
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
-	}
-
-	token, err := u.middleware.GenerateToken(*data)
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
-	}
-
-	return c.Status(201).JSON(web.Success("Success login into account", token))
+	return handler(c)
 }
+func (u *user) HomeView(c *fiber.Ctx) error {
+	index := auth.RegisterIndex()
+	views := auth.Register("Register Account", false, flash.Get(c), index)
 
-// @Summary get user by emails
-// @ID get_by_emails
-// @Tags users
-// @Accept json
-// @Produce json
-// @Param emails path string true "Emails User"
-// @Route /api/user/{emails} [get]
-// @Success 200 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 500 {object} web.Response
-func (u *user) Get(c *fiber.Ctx) error {
-	getToken := c.Get("Authorization")
-	email, err := u.middleware.GetEmail(getToken)
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	handler := adaptor.HTTPHandler(templ.Handler(views))
+
+	if c.Method() == "POST" {
+		request := domain.Register{
+			Username: c.FormValue("username"),
+			Password: c.FormValue("password"),
+			Email:    c.FormValue("email"),
+		}
+
+		data, err := u.service.Register(request)
+		if err != nil {
+			log.Println(err.Error())
+			fm := fiber.Map{
+				"type":    "error",
+				"message": err.Error(),
+			}
+
+			return flash.WithError(c, fm).Redirect("/")
+		}
+
+		// Mengirim file JSON
+		go func() {
+			c.Set("Content-Disposition", "attachment; filename=keygen.pgp")
+			c.Set("Content-Type", "text/plain")
+			c.Send([]byte(data.Private))
+		}()
+
+		// Return redirect if succces
+		fm := fiber.Map{
+			"type":    "success",
+			"message": "Success Creat Account",
+		}
+
+		return flash.WithSuccess(c, fm).Redirect("/login")
+
 	}
 
-	data, err := u.service.GetEmail(*email)
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
-	}
-
-	return c.Status(201).JSON(web.Success("Success get account", data))
+	return handler(c)
 }
