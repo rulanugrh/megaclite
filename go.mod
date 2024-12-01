@@ -3,6 +3,7 @@ module github.com/rulanugrh/megaclite
 go 1.23.2
 
 require (
+	github.com/ProtonMail/go-crypto v1.1.0
 	github.com/ProtonMail/gopenpgp/v3 v3.0.0
 	github.com/a-h/templ v0.2.793
 	github.com/go-playground/validator/v10 v10.22.1
@@ -19,7 +20,6 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/ProtonMail/go-crypto v1.1.0 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect

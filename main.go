@@ -5,10 +5,12 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ProtonMail/gopenpgp/v3/crypto"
 	"github.com/ProtonMail/gopenpgp/v3/profile"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/rulanugrh/megaclite/api"
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
@@ -16,9 +18,10 @@ import (
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/repository"
 	"github.com/rulanugrh/megaclite/internal/service"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
+
+var Store *session.Store
 
 // @title Megaclite API Documentation
 // @version 1.0
@@ -78,7 +81,7 @@ func main() {
 			log.Fatal("Error while migration data: " + err.Error())
 		}
 	} else if args == "seed" {
-		seeder(db, *conf)
+		seeder(db)
 	} else if args == "api" {
 		webAPI(mailAPI, userAPI, categoryAPI, labelingAPI, app, conf)
 	} else if args == "serve" {
@@ -125,59 +128,71 @@ func webAPI(mail api.MailInterface, user api.UserInterface, category api.Categor
 	log.Println("App running at: " + config.Server.Host + ":" + config.Server.ApiPort)
 }
 
-func webView(user handler.UserView, app *fiber.App, config *config.App) {
+func webView(user handler.UserView, app *fiber.App, conf *config.App) {
+	config.Store = session.New(
+		session.Config{
+			CookieHTTPOnly: true,
+			Expiration:     24 * time.Hour,
+		},
+	)
 	app.Static("/assets", "./view/assets")
 	// Views User
-	app.Get("/", user.RegisterView)
-	app.Post("/", user.RegisterView)
-	app.Get("/login", user.LoginView)
-	app.Post("/login", user.LoginView)
+	app.Get("/", user.LoginView)
+	app.Post("/", user.LoginView)
+	app.Get("/register", user.RegisterView)
+	app.Post("/register", user.RegisterView)
 
+	// Home Index
+	app.Get("/home", middleware.ViewMiddleware, user.HomeView)
 	// Running Application
-	err := app.Listen(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.ViewPort))
+	err := app.Listen(fmt.Sprintf("%s:%s", conf.Server.Host, conf.Server.ViewPort))
 	if err != nil {
 		log.Fatal("Error while running server: " + err.Error())
 	}
 
-	log.Println("App running at: " + config.Server.Host + ":" + config.Server.ViewPort)
+	log.Println("App running at: " + conf.Server.Host + ":" + conf.Server.ViewPort)
 
 }
 
-func seeder(db *gorm.DB, conf config.App) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(conf.Administrator.Password), bcrypt.DefaultCost)
+func seeder(db *gorm.DB) {
+	favoriteCategory := domain.Category{
+		Name:        "Favorite",
+		Description: "Favorite Mail",
+	}
+
+	archiveCategory := domain.Category{
+		Name:        "Archive",
+		Description: "Archive Mail",
+	}
+
+	trashCategory := domain.Category{
+		Name:        "Trash",
+		Description: "Trash Mail",
+	}
+
+	spamCategory := domain.Category{
+		Name:        "Spam",
+		Description: "Spam Mail",
+	}
+
+	err := db.Create(&favoriteCategory).Error
 	if err != nil {
-		log.Fatal("Error hashed password: " + err.Error())
+		log.Fatal("Something error while migrate: " + err.Error())
 	}
 
-	hashed_user, err := bcrypt.GenerateFromPassword([]byte(conf.Dummy.Password), bcrypt.DefaultCost)
+	err = db.Create(&archiveCategory).Error
 	if err != nil {
-		log.Fatal("Error hashed password: " + err.Error())
+		log.Fatal("Something error while migrate: " + err.Error())
 	}
 
-	admin := domain.User{
-		Username: "Administrator Megaclite",
-		Password: string(hashed),
-		Email:    conf.Administrator.Email,
-		Avatar:   "https://i.pinimg.com/736x/f9/7d/cc/f97dcc1f4c7d2e4ceb47b57dc13060c1.jpg",
-		Address:  "JL. Kemuning 200 Apalotega",
-	}
-
-	dummy_user := domain.User{
-		Username: "Kyora",
-		Password: string(hashed_user),
-		Email:    conf.Dummy.Email,
-		Avatar:   "https://i.pinimg.com/736x/99/73/e7/9973e72bde7835e070e7a8c795522ffb.jpg",
-		Address:  "JL. Penuh Hambatan No. 201",
-	}
-
-	err = db.Create(&admin).Error
+	err = db.Create(&trashCategory).Error
 	if err != nil {
-		log.Fatal("Error while seeding administrator: " + err.Error())
+		log.Fatal("Something error while migrate: " + err.Error())
 	}
 
-	err = db.Create(&dummy_user).Error
+	err = db.Create(&spamCategory).Error
 	if err != nil {
-		log.Fatal("Error while seeding dummy user: " + err.Error())
+		log.Fatal("Something error while migrate: " + err.Error())
 	}
 
 	log.Println("Success seeding data into database")

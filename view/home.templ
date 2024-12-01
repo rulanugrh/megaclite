@@ -2,17 +2,17 @@ package view
 
 import "github.com/gofiber/fiber/v2"
 
-templ HomeIndex() {
+templ HomeIndex(username string) {
     <section class="pt-32 pb-32">
         <div class="max-w-7xl mx-auto">
             <div class="container">
-                <h1 class="text-5xl text-white font-jetBrains text-center">Hello World</h1>
+                <h1 class="text-5xl text-white font-jetBrains text-center">Hello { username }</h1>
             </div>
         </div>
     </section>
 }
 
-templ Home(page string, isError bool,  msg fiber.Map, cmp templ.Component) {
+templ Home(page string, isError bool, msg fiber.Map, cmp templ.Component) {
     @Layout(page, msg, isError) {
         @cmp
     }

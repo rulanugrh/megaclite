@@ -1,8 +1,6 @@
 package service
 
 import (
-	// "io/fs"
-
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
@@ -42,18 +40,19 @@ func (u *user) Register(req domain.Register) (*web.PGPResponse, error) {
 		return nil, web.BadRequest("Error while hashed password")
 	}
 
-	request := domain.Register{
-		Username: req.Username,
-		Password: string(hashed),
-		Email:    req.Email,
-	}
-
-	data, err := u.repository.Register(request)
+	key, err := u.middleware.GenerateKeygen(req)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
 
-	key, err := u.middleware.GenerateKeygen(req)
+	request := domain.Register{
+		Username: req.Username,
+		Password: string(hashed),
+		Email:    req.Email,
+		KeygenID: key.HexKeyID,
+	}
+
+	data, err := u.repository.Register(request)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
@@ -84,11 +83,15 @@ func (u *user) Login(req domain.Login, private string) (*web.ResponseLogin, erro
 
 	id, check, err := u.middleware.VerificationKey(private)
 	if !check && err != nil {
-		return nil, web.BadRequest("Sorry secret message and keygen not matched")
+		return nil, web.BadRequest(err.Error())
+	}
+
+	if id != data.KeygenID {
+		return nil, web.BadRequest("Sorry Your ID not matched")
 	}
 
 	response := web.ResponseLogin{
-		KeyID:  *id,
+		KeyID:  data.KeygenID,
 		UserID: data.ID,
 		Email:  data.Email,
 	}

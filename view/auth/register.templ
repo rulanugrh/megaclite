@@ -6,32 +6,34 @@ import (
 )
 
 templ RegisterIndex() {
-    <section class="pt-32 pb-32">
-        <div class="max-w-7xl mx-auto">
-            <div class="container">
-                <form class="max-w-sm mx-auto" method="post" hx-swap="transition:true">
-                    <div class="mb-5">
-                        <label id="email" for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Email</label>
-                        <input type="email" id="email" name="email"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 font-jetBrains focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            placeholder="name@flowbite.com" required />
+    <section id="register">
+        <div class="flex justify-center items-center h-screen">
+            <div class="lg:p-36 md:p-52 sm:p-20 p-8 w-full lg:w-1/2">
+                <h1 class="text-2xl font-semibold mb-4">Login</h1>
+                <form action="" method="post" hx-swap="transition:true">
+                    <div class="mb-4">
+                        <label for="username" id="username" class="block dark:text-lightColor text-darkColor font-jetBrains">Username</label>
+                        <input type="username" id="username" name="username" class=" font-jetBrains w-full border dark:border-gray-300 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required placeholder="John Doe"/>
                     </div>
-                    <div class="mb-5">
-                        <label id="username" for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Username</label>
-                        <input type="text" id="username" name="username"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg font-jetBrains focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            placeholder="Kyora" required />
+                    <div class="mb-4">
+                        <label for="email" id="email" class="block dark:text-lightColor text-darkColor">Email</label>
+                        <input type="email" id="email" name="email" class="w-full border dark:border-gray-300 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required placeholder="jane@megaclite.com"/>
                     </div>
-                    <div class="mb-5">
-                        <label id="password" for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-jetBrains">Password</label>
-                        <input type="password" id="password" name="password"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg font-jetBrains focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                            minlength="8" required />
+                    <div class="mb-4">
+                        <label for="password" id="password" class="block dark:text-lightColor text-darkColor">Password</label>
+                        <input type="password" id="password" name="password" class="w-full border dark:border-gray-300 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required minlength="8"/>
                     </div>
-                    <button type="submit"
-                        class="text-white font-jetBrains bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register
-                        new account</button>
+                    <div class="mb-6 text-blue-500">
+                        <a href="/" class="hover:underline">Sign In Here</a>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Register</button>
                 </form>
+                <div class="mt-6 text-blue-500">
+
+                </div>
+            </div>
+            <div class="w-1/2 h-screen hidden lg:block">
+                <img src="https://i.pinimg.com/736x/4e/a5/90/4ea590d53ceb2cdadec5c19541157af6.jpg" class="object-cover w-full h-full" alt="Icon Image"/>
             </div>
         </div>
     </section>

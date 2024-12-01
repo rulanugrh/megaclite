@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"bytes"
 	"fmt"
 	"log"
+	"strings"
 
+	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/ProtonMail/gopenpgp/v3/crypto"
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
@@ -15,7 +16,7 @@ type PGPInterface interface {
 	Encryption(req domain.MailRegister) ([]byte, error)
 	Decryption(req domain.Mail) ([]byte, error)
 	GenerateKeygen(req domain.Register) (*web.PGPResponse, error)
-	VerificationKey(private string) (*string, bool, error)
+	VerificationKey(private string) (string, bool, error)
 }
 
 type pgp struct {
@@ -87,40 +88,25 @@ func (p *pgp) GenerateKeygen(req domain.Register) (*web.PGPResponse, error) {
 	}
 
 	return &web.PGPResponse{
-		Private: armoredPrivate,
+		Private:  armoredPrivate,
+		HexKeyID: private.GetEntity().PrivateKey.KeyIdString(),
 	}, nil
 }
 
-func (p *pgp) VerificationKey(private string) (*string, bool, error) {
-	privateKey, err := crypto.NewKeyFromArmored(private)
+func (p *pgp) VerificationKey(private string) (string, bool, error) {
+	privateKey := strings.NewReader(private)
+
+	keyReader, err := openpgp.ReadArmoredKeyRing(privateKey)
 	if err != nil {
-		return nil, false, web.InternalServerError("Cannot get private key")
+		return "", false, web.BadRequest("Cannot Read Private Key")
 	}
 
-	privateKey.GetHexKeyID()
-
-	encryption, err := p.utils.Encryption().Recipient(privateKey).New()
-	if err != nil {
-		return nil, false, web.InternalServerError("cannot handle encryption with this key")
+	if len(keyReader) == 0 {
+		return "", false, web.BadRequest("Sorry Private Key Not Found")
 	}
 
-	message, _ := encryption.Encrypt([]byte(p.conf.Server.Secret))
-	armored, err := message.ArmorBytes()
-	if err != nil {
-		return nil, false, web.InternalServerError("Cannot get secret")
-	}
+	id := keyReader[0].PrivateKey.KeyIdString()
+	log.Println(id)
+	return id, true, nil
 
-	verify, _ := p.utils.Decryption().DecryptionKey(privateKey).New()
-	decrypt, err := verify.Decrypt(armored, crypto.Armor)
-	if err != nil {
-		return nil, false, web.InternalServerError("Cannot verify secret message with this key")
-	}
-
-	msg := decrypt.Bytes()
-	if !bytes.Equal(msg, []byte(p.conf.Server.Secret)) {
-		return nil, false, web.BadRequest("Sorry secret mot matched")
-	}
-
-	id := privateKey.GetHexKeyID()
-	return &id, true, nil
 }

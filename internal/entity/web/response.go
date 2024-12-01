@@ -45,4 +45,5 @@ type Category struct {
 type PGPResponse struct {
 	Private  string `json:"private_key"`
 	Username string `json:"username"`
+	HexKeyID string `json:"hex_key"`
 }

@@ -10,7 +10,7 @@ import (
 
 type JWTInterface interface {
 	GenerateToken(request web.ResponseLogin) (*string, error)
-	GetEmail(token string) (*string, error)
+	GetEmail(token string) (string, error)
 }
 
 type jwtclaim struct {
@@ -66,11 +66,11 @@ func (j *jsonwebtoken) captureToken(token string) (*jwtclaim, error) {
 	return claim, nil
 }
 
-func (j *jsonwebtoken) GetEmail(token string) (*string, error) {
+func (j *jsonwebtoken) GetEmail(token string) (string, error) {
 	claim, err := j.captureToken(token)
 	if err != nil {
-		return nil, web.InternalServerError(err.Error())
+		return "", web.InternalServerError(err.Error())
 	}
 
-	return &claim.Email, nil
+	return claim.Email, nil
 }

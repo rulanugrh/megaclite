@@ -48,7 +48,7 @@ func (m *mail) Create(c *fiber.Ctx) error {
 
 	// parser body request to entity
 	var request domain.MailRegister
-	request.From = *email
+	request.From = email
 	err = c.BodyParser(&request)
 	// check error if have error while create data
 	if err != nil {
@@ -84,7 +84,7 @@ func (m *mail) GetAll(c *fiber.Ctx) error {
 	}
 
 	// process get data from email parameter
-	data, err := m.service.Get(*email)
+	data, err := m.service.Get(email)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

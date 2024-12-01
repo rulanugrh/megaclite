@@ -33,6 +33,7 @@ func (u *user) Register(req domain.Register) (*domain.User, error) {
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,
+		KeygenID: req.KeygenID,
 	}
 
 	err := u.connection.DB.Create(&request).Error

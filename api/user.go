@@ -118,7 +118,7 @@ func (u *user) Get(c *fiber.Ctx) error {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}
 
-	data, err := u.service.GetEmail(*email)
+	data, err := u.service.GetEmail(email)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}

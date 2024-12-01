@@ -15,7 +15,7 @@ templ Layout(page string, msg fiber.Map, isError bool) {
 				content="Full stack application about Implement PGP with Golang + MySQL and user HTMX as Frontend"
 			/>
 			<meta name="google" content="notranslate"/>
-			<link rel="shortcut icon" href="/img/gopher-svgrepo-com.svg" type="image/svg+xml"/>
+			<link rel="shortcut icon" href="https://i.pinimg.com/736x/a8/46/4d/a8464d6634943906865a75ecab08ba7e.jpg" type="image/svg+xml"/>
 			<link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.10/dist/full.min.css" rel="stylesheet" type="text/css"/>
 			<link rel="stylesheet" href="/assets/css/styles.css">
 			<title>{ page }</title>
@@ -28,7 +28,10 @@ templ Layout(page string, msg fiber.Map, isError bool) {
 					theme: {
 						extend: {
 							colors: {
-								clifford: '#da373d',
+								lightColor: '#ECDFCC',
+								lightGray: '#697565',
+								boldGray: '#3C3D37',
+								darkColor: '#1E201E'
 							},
 							container: {
 								center: true,
@@ -42,8 +45,8 @@ templ Layout(page string, msg fiber.Map, isError bool) {
 				}
 			</script>
         </head>
-		<body>
-			<main class={ templ.KV("pt-40", !isError) }>
+		<body class="font-jetBrains">
+			<main class={ templ.KV("p", !isError) }>
 				{ children... }
 				@partials.FlashMessages(msg)
 			</main>

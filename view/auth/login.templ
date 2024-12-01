@@ -1,0 +1,57 @@
+package auth
+
+import (
+    "github.com/gofiber/fiber/v2"
+    "github.com/rulanugrh/megaclite/view"
+)
+
+templ LoginIndex() {
+    <section id="login">
+        <div class="flex justify-center items-center h-screen">
+            <div class="lg:w-1/2 w-full h-screen hidden lg:block">
+                <img src="https://i.pinimg.com/736x/4e/a5/90/4ea590d53ceb2cdadec5c19541157af6.jpg" class="object-cover w-full h-full" alt="Icon Image"/>
+            </div>
+            <div class="lg:p-36 md:p-52 sm:p-20 p-8 w-full lg:w-1/2">
+                <h1 class="text-4xl font-semibold mb-4 font-jetBrains">Login</h1>
+                <form action="" method="post" hx-swap="transition:true" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="email" id="email" class="block dark:text-lightColor text-darkColor font-jetBrains">Email</label>
+                        <input type="email" id="email" name="email" class="w-full border dark:border-gray-300 font-jetBrains border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required placeholder="kyora@gmail.com"/>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" id="password" class="block dark:text-lightColor font-jetBrains text-darkColor">Password</label>
+                        <input type="password" id="password" name="password" class="w-full font-jetBrains border font-jetBrains dark:border-gray-300 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required placeholder="kyora@gmail.com" minlength="8"/>
+                    </div>
+                    <div class="mb-4">
+                        <label for="file" id="file" class="block dark:text-lightColor text-darkColor font-jetBrains">Private Key</label>
+                        <input type="file" id="file" name="file" class="w-full border dark:border-gray-300 font-jetBrains border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" autocomplete="off" required />
+                    </div>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" id="remember" name="remember" class="text-blue-500">
+                        <label for="remember" class="text-gray-600 ml-2">Remember Me</label>
+                    </div>
+                    <div class="mb-6 text-blue-500">
+                        <div class="flex items-center justify-between relative">
+                            <div class="px-1">
+                                <a href="/reset-password" class="hover:underline font-jetBrains">Reset Password</a>
+                            </div>
+                            <div class="px-1">
+                                <a href="/register" class="hover:underline font-jetBrains">Create New Account</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full font-jetBrains">Login</button>
+                </form>
+                <div class="mt-6 text-blue-500">
+
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+templ Login(page string, isError bool, msg fiber.Map, cmp templ.Component) {
+    @view.Layout(page, msg, isError) {
+        @cmp
+    }
+}
