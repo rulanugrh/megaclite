@@ -1,0 +1,75 @@
+package partials
+
+templ Navbar() {
+	<nav class="flex">
+        <aside id="sidebar" class="sidebar w-80 bg-gray-800 text-white flex-none transform -translate-x-full md:translate-x-0 fixed z-50 h-full">
+            <div class="p-8">
+                <span class="self-center px-4 text-4xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Megaclite</span>
+                <p class="self-center px-4 text-sm text-gray-100/50 whitespace-nowrap">Version: 1.0.0</p>
+
+                <div class="mt-5 px-4">
+                    <button type="button" href="#" class="w-full h-full text-center rounded-lg hover:bg-gray-300 hover:font-bold shadow-lightColor/20 shadow-lg py-2 bg-gray-200 text-darkColor">COMPOSE</button>
+                </div>
+                
+                <div class="mt-14">
+                    <div class="mb-8">
+                        <h2 class="uppercase font-semibold px-4 text-gray-400">Mail Management</h2>
+                        <ul id="mail" class="flex flex-col mt-2">
+                            <li>
+                                <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-inbox text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Inbox</span>
+                                    </i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-circle-exclamation text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Spam</span>
+                                    </i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-trash text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Trash</span>
+                                    </i>
+                                </a>
+
+                            </li>
+
+                            <li>
+                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-box-archive text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Archived</span>
+                                    </i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mb-2">
+                        <h2 class="uppercase font-semibold text-gray-400 px-4">User Management</h2>
+                        <ul id="mail" class="flex flex-col mt-2">
+                            <li>
+                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-user text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Profile</span>
+                                    </i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-right-from-bracket text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Logout</span>
+                                    </i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </nav>
+}

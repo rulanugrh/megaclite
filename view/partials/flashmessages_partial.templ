@@ -6,7 +6,7 @@ templ FlashMessages(msg fiber.Map) {
 	if msg["message"] != nil {
 		<div
  			role="alert"
- 			class={ "alert w-fit min-w-[384px] mx-auto mt-12 fixed right-0 top-0", templ.KV("alert-success", msg["type"] == "success"),
+ 			class={ "alert w-fit min-w-sm lg:min-w-[384px] mx-auto mt-12 fixed right-0 bottom-0", templ.KV("alert-success", msg["type"] == "success"),
                 templ.KV("alert-error", msg["type"] == "error") }
 		>
 			if msg["type"] == "error" {

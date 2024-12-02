@@ -1,1 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+/* Smooth transition for sidebar visibility */
+.sidebar {
+    transition: transform 0.3s ease-in-out;
+}
+
+html {
+    scroll-behavior: smooth;
+}

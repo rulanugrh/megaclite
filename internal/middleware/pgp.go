@@ -106,7 +106,6 @@ func (p *pgp) VerificationKey(private string) (string, bool, error) {
 	}
 
 	id := keyReader[0].PrivateKey.KeyIdString()
-	log.Println(id)
 	return id, true, nil
 
 }

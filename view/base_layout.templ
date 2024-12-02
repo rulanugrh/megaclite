@@ -4,7 +4,7 @@ import (
 	"github.com/rulanugrh/megaclite/view/partials"
 )
 
-templ Layout(page string, msg fiber.Map, isError bool) {
+templ Layout(page string, msg fiber.Map, isError bool, authorize bool) {
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -23,6 +23,9 @@ templ Layout(page string, msg fiber.Map, isError bool) {
 			<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
 			<script src="https://cdn.tailwindcss.com"></script>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+			<script src="/assets/js/script.js"></script>
 			<script>
 				tailwind.config = {
 					theme: {
@@ -46,10 +49,11 @@ templ Layout(page string, msg fiber.Map, isError bool) {
 			</script>
         </head>
 		<body class="font-jetBrains">
-			<main class={ templ.KV("p", !isError) }>
-				{ children... }
-				@partials.FlashMessages(msg)
-			</main>
+			if authorize {
+				@partials.Navbar()
+			}
+			{ children... }
+			@partials.FlashMessages(msg)
 		</body>
     </html>
 }

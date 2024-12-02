@@ -148,20 +148,26 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 	return handler(c)
 }
 func (u *user) HomeView(c *fiber.Ctx) error {
+	fm := fiber.Map{
+		"type": "error",
+	}
+
 	token := c.Locals("Authorization").(string)
 	getMail, err := u.middleware.GetEmail(token)
 
 	if err != nil {
-		fm := fiber.Map{
-			"type":    "error",
-			"message": "Cannot get token jwt",
-		}
+		fm["message"] = "Cannot get JWT Token"
+		return flash.WithError(c, fm).Redirect("/")
+	}
 
+	var check bool = getMail != ""
+	if !check {
+		fm["message"] = "Sorry you token is invalid"
 		return flash.WithError(c, fm).Redirect("/")
 	}
 
 	index := view.HomeIndex(getMail)
-	views := view.Home("Dashboard", false, flash.Get(c), index)
+	views := view.Home("Dashboard", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 

@@ -51,7 +51,7 @@ templ LoginIndex() {
 }
 
 templ Login(page string, isError bool, msg fiber.Map, cmp templ.Component) {
-    @view.Layout(page, msg, isError) {
+    @view.Layout(page, msg, isError, false) {
         @cmp
     }
 }
