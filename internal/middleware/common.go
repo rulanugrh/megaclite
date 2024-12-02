@@ -6,11 +6,25 @@ import (
 	"github.com/sujit-baniya/flash"
 )
 
-func ViewMiddleware(c *fiber.Ctx) error {
+type CommonMiddlewareInterface interface {
+	ViewMiddleware(c *fiber.Ctx) error
+}
+
+type common struct {
+	conf *config.App
+}
+
+func NewCommonMiddleware(conf *config.App) CommonMiddlewareInterface {
+	return &common{
+		conf: conf,
+	}
+}
+func (cm *common) ViewMiddleware(c *fiber.Ctx) error {
 	fm := fiber.Map{
 		"type": "error",
 	}
-	session, err := config.Store.Get(c)
+
+	session, err := cm.conf.Store.Get(c)
 	if err != nil {
 		fm["message"] = "Cannot Create New Session"
 

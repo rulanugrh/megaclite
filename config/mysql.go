@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -65,4 +66,57 @@ func (conn *Database) Connection() *gorm.DB {
 
 	conn.DB = db
 	return db
+}
+
+func (conn *Database) Migration() {
+	err := conn.DB.AutoMigrate(&domain.Category{}, &domain.User{}, &domain.Mail{}, &domain.MailLabel{})
+	if err != nil {
+		log.Fatal("Error while migration data: " + err.Error())
+	}
+
+	log.Println("Success Migration Entity")
+}
+
+func (conn *Database) Seeder() {
+	favoriteCategory := domain.Category{
+		Name:        "Favorite",
+		Description: "Favorite Mail",
+	}
+
+	archiveCategory := domain.Category{
+		Name:        "Archive",
+		Description: "Archive Mail",
+	}
+
+	trashCategory := domain.Category{
+		Name:        "Trash",
+		Description: "Trash Mail",
+	}
+
+	spamCategory := domain.Category{
+		Name:        "Spam",
+		Description: "Spam Mail",
+	}
+
+	err := conn.DB.Create(&favoriteCategory).Error
+	if err != nil {
+		log.Fatal("Something error while migrate: " + err.Error())
+	}
+
+	err = conn.DB.Create(&archiveCategory).Error
+	if err != nil {
+		log.Fatal("Something error while migrate: " + err.Error())
+	}
+
+	err = conn.DB.Create(&trashCategory).Error
+	if err != nil {
+		log.Fatal("Something error while migrate: " + err.Error())
+	}
+
+	err = conn.DB.Create(&spamCategory).Error
+	if err != nil {
+		log.Fatal("Something error while migrate: " + err.Error())
+	}
+
+	log.Println("Success seeding data into database")
 }

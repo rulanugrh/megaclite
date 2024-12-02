@@ -2,12 +2,11 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/joho/godotenv"
 )
-
-var Store *session.Store
 
 type App struct {
 	Server struct {
@@ -29,6 +28,8 @@ type App struct {
 		Host string
 		Port string
 	}
+
+	Store *session.Store
 }
 
 var app *App
@@ -78,6 +79,12 @@ func initConfig() *App {
 	conf.Server.ViewPort = os.Getenv("SERVER_VIEW_PORT")
 
 	conf.Server.Secret = os.Getenv("SERVER_SECRET")
+	conf.Store = session.New(
+		session.Config{
+			CookieHTTPOnly: true,
+			Expiration:     24 * time.Hour,
+		},
+	)
 	return &conf
 
 }

@@ -25,12 +25,14 @@ type UserView interface {
 type user struct {
 	service    service.UserInterface
 	middleware middleware.JWTInterface
+	conf       *config.App
 }
 
-func NewUserView(service service.UserInterface) UserView {
+func NewUserView(service service.UserInterface, conf *config.App) UserView {
 	return &user{
 		service:    service,
 		middleware: middleware.NewJWTToken(),
+		conf:       conf,
 	}
 }
 
@@ -115,7 +117,7 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 			return flash.WithError(c, fm).Redirect("/")
 		}
 
-		session, err := config.Store.Get(c)
+		session, err := u.conf.Store.Get(c)
 		if err != nil {
 			fm := fiber.Map{
 				"type":    "error",
