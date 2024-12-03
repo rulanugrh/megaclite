@@ -1,5 +1,7 @@
 package web
 
+import "time"
+
 type GetUser struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
@@ -21,11 +23,12 @@ type GetDetailMail struct {
 }
 
 type GetMail struct {
-	ID       uint   `json:"id"`
-	From     string `json:"from"`
-	To       string `json:"to"`
-	Title    string `json:"title"`
-	Subtitle string `json:"subtitle"`
+	ID        uint      `json:"id"`
+	From      string    `json:"from"`
+	To        string    `json:"to"`
+	Title     string    `json:"title"`
+	Subtitle  string    `json:"subtitle"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type GetMailLabel struct {

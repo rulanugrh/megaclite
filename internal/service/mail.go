@@ -106,11 +106,12 @@ func (m *mail) Get(from string) (*[]web.GetMail, error) {
 
 	for _, mails := range *data {
 		mail := web.GetMail{
-			ID:       mails.ID,
-			From:     mails.From,
-			To:       mails.To,
-			Title:    mails.Title,
-			Subtitle: mails.Subtitle,
+			ID:        mails.ID,
+			From:      mails.From,
+			To:        mails.To,
+			Title:     mails.Title,
+			Subtitle:  mails.Subtitle,
+			CreatedAt: mails.CreatedAt,
 		}
 
 		response = append(response, mail)
