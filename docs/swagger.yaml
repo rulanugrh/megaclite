@@ -62,7 +62,6 @@ definitions:
       to:
         type: string
     required:
-    - from
     - message
     - subtitle
     - title
@@ -71,6 +70,8 @@ definitions:
   domain.Register:
     properties:
       email:
+        type: string
+      keygen_id:
         type: string
       password:
         type: string

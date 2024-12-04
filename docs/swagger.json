@@ -222,7 +222,6 @@
         "domain.MailRegister": {
             "type": "object",
             "required": [
-                "from",
                 "message",
                 "subtitle",
                 "title",
@@ -264,6 +263,9 @@
             ],
             "properties": {
                 "email": {
+                    "type": "string"
+                },
+                "keygen_id": {
                     "type": "string"
                 },
                 "password": {

@@ -228,7 +228,6 @@ const docTemplate = `{
         "domain.MailRegister": {
             "type": "object",
             "required": [
-                "from",
                 "message",
                 "subtitle",
                 "title",
@@ -270,6 +269,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "email": {
+                    "type": "string"
+                },
+                "keygen_id": {
                     "type": "string"
                 },
                 "password": {
