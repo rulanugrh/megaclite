@@ -24,7 +24,7 @@ type jsonwebtoken struct {
 	config *config.App
 }
 
-func NewJWTToken() JWTInterface {
+func NewJWTMiddleware() JWTInterface {
 	return &jsonwebtoken{
 		config: config.GetConfig(),
 	}

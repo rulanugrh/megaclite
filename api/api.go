@@ -32,7 +32,8 @@ func (a *Api) Run(user endpoint.UserInterface, labeling endpoint.LabelingInterfa
 	mailRoutes := a.app.Group("/api/mail")
 	mailRoutes.Post("/", mail.Create)
 	mailRoutes.Get("/find/:id", mail.GetByID)
-	mailRoutes.Get("/getall", mail.GetAll)
+	mailRoutes.Get("/sent", mail.Sent)
+	mailRoutes.Get("/inbox", mail.Inbox)
 	mailRoutes.Delete("/delete/:id", mail.GetByID)
 
 	// Routing API for User

@@ -12,7 +12,8 @@ type MailInterface interface {
 	Create(req domain.MailRegister) (*domain.Mail, error)
 	Get(id uint) (*domain.Mail, error)
 	Delete(id uint) error
-	GetAll(from string) (*[]domain.Mail, error)
+	Sent(from string) (*[]domain.Mail, error)
+	Inbox(to string) (*[]domain.Mail, error)
 }
 
 type mail struct {
@@ -64,11 +65,22 @@ func (m *mail) Delete(id uint) error {
 	return nil
 }
 
-func (m *mail) GetAll(from string) (*[]domain.Mail, error) {
+func (m *mail) Sent(from string) (*[]domain.Mail, error) {
 	var response []domain.Mail
-	err := m.connection.DB.Raw("SELECT * FROM mails WHERE `from` = ? OR `to` = ?", from, from).Scan(&response).Error
+	err := m.connection.DB.Raw("SELECT * FROM mails WHERE `from` = ?", from).Scan(&response).Error
 	if err != nil {
-		return nil, web.InternalServerError("Cannot get all mail with this email")
+		return nil, web.InternalServerError("Cannot get all sent mail")
+	}
+
+	return &response, nil
+}
+
+func (m *mail) Inbox(to string) (*[]domain.Mail, error) {
+	var response []domain.Mail
+	err := m.connection.DB.Raw("SELECT * FROM mails WHERE `to` = ?", to).Scan(&response).Error
+
+	if err != nil {
+		return nil, web.InternalServerError("Canot get all inbox mail")
 	}
 
 	return &response, nil

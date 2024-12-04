@@ -11,7 +11,6 @@ import (
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
-	"github.com/rulanugrh/megaclite/view"
 	"github.com/rulanugrh/megaclite/view/auth"
 	"github.com/sujit-baniya/flash"
 )
@@ -19,7 +18,6 @@ import (
 type UserView interface {
 	RegisterView(c *fiber.Ctx) error
 	LoginView(c *fiber.Ctx) error
-	HomeView(c *fiber.Ctx) error
 }
 
 type user struct {
@@ -31,7 +29,7 @@ type user struct {
 func NewUserView(service service.UserInterface, conf *config.App) UserView {
 	return &user{
 		service:    service,
-		middleware: middleware.NewJWTToken(),
+		middleware: middleware.NewJWTMiddleware(),
 		conf:       conf,
 	}
 }
@@ -144,32 +142,6 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 
 		return flash.WithSuccess(c, fm).Redirect("/home")
 	}
-
-	return handler(c)
-}
-func (u *user) HomeView(c *fiber.Ctx) error {
-	fm := fiber.Map{
-		"type": "error",
-	}
-
-	token := c.Locals("Authorization").(string)
-	getMail, err := u.middleware.GetEmail(token)
-
-	if err != nil {
-		fm["message"] = "Cannot get JWT Token"
-		return flash.WithError(c, fm).Redirect("/")
-	}
-
-	var check bool = getMail != ""
-	if !check {
-		fm["message"] = "Sorry you token is invalid"
-		return flash.WithError(c, fm).Redirect("/")
-	}
-
-	index := view.HomeIndex(getMail)
-	views := view.Home("Dashboard", false, flash.Get(c), check, index)
-
-	handler := adaptor.HTTPHandler(templ.Handler(views))
 
 	return handler(c)
 }

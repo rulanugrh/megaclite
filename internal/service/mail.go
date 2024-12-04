@@ -11,7 +11,8 @@ type MailInterface interface {
 	Create(req domain.MailRegister) (*web.GetDetailMail, error)
 	FindByID(id uint) (*web.GetDetailMail, error)
 	Delete(id uint) error
-	Get(from string) (*[]web.GetMail, error)
+	Sent(from string) (*[]web.GetMail, error)
+	Inbox(to string) (*[]web.GetMail, error)
 }
 
 type mail struct {
@@ -96,10 +97,34 @@ func (m *mail) Delete(id uint) error {
 	return nil
 }
 
-func (m *mail) Get(from string) (*[]web.GetMail, error) {
+func (m *mail) Sent(from string) (*[]web.GetMail, error) {
 	var response []web.GetMail
 
-	data, err := m.repository.GetAll(from)
+	data, err := m.repository.Sent(from)
+	if err != nil {
+		return nil, web.InternalServerError(err.Error())
+	}
+
+	for _, mails := range *data {
+		mail := web.GetMail{
+			ID:        mails.ID,
+			From:      mails.From,
+			To:        mails.To,
+			Title:     mails.Title,
+			Subtitle:  mails.Subtitle,
+			CreatedAt: mails.CreatedAt,
+		}
+
+		response = append(response, mail)
+	}
+
+	return &response, nil
+}
+
+func (m *mail) Inbox(from string) (*[]web.GetMail, error) {
+	var response []web.GetMail
+
+	data, err := m.repository.Inbox(from)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}

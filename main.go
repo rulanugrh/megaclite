@@ -56,6 +56,7 @@ func main() {
 	mailRepository := repository.NewMailRepository(*connectionDB)
 	mailService := service.NewMailService(mailRepository, pgpMiddleware)
 	mailAPI := endpoint.NewMailAPI(mailService)
+	mailView := handler.NewMailView(mailService)
 
 	// Initialize Category Komponen
 	categoryRepository := repository.NewCategoryRepository(*connectionDB)
@@ -76,7 +77,7 @@ func main() {
 	} else if args == "api" {
 		apiRoute.Run(userAPI, labelingAPI, mailAPI, categoryAPI)
 	} else if args == "serve" {
-		viewRoute.Run(userView)
+		viewRoute.Run(userView, mailView)
 	} else {
 		help_command()
 	}

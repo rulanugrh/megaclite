@@ -12,9 +12,10 @@ import (
 
 type MailInterface interface {
 	Create(c *fiber.Ctx) error
-	GetAll(c *fiber.Ctx) error
+	Sent(c *fiber.Ctx) error
 	GetByID(c *fiber.Ctx) error
 	Delete(c *fiber.Ctx) error
+	Inbox(c *fiber.Ctx) error
 }
 
 type mail struct {
@@ -25,7 +26,7 @@ type mail struct {
 func NewMailAPI(service service.MailInterface) MailInterface {
 	return &mail{
 		service:    service,
-		middleware: middleware.NewJWTToken(),
+		middleware: middleware.NewJWTMiddleware(),
 	}
 }
 
@@ -65,17 +66,16 @@ func (m *mail) Create(c *fiber.Ctx) error {
 	return c.Status(201).JSON(web.Created("Success create new Mail", data))
 }
 
-// @Summary get all emails
+// @Summary get all sent email
 // @ID getAll
 // @Tags mails
 // @Accept json
 // @Produce json
-// @Param user path string true "user parameter"
-// @Route /api/mail/get/{user} [get]
+// @Route /api/mail/sent
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
-func (m *mail) GetAll(c *fiber.Ctx) error {
+func (m *mail) Sent(c *fiber.Ctx) error {
 	// get email from parameter
 	getToken := c.Get("Authorization")
 	email, err := m.middleware.GetEmail(getToken)
@@ -84,7 +84,7 @@ func (m *mail) GetAll(c *fiber.Ctx) error {
 	}
 
 	// process get data from email parameter
-	data, err := m.service.Get(email)
+	data, err := m.service.Sent(email)
 	if err != nil {
 		return c.Status(400).JSON(web.BadRequest(err.Error()))
 	}
@@ -147,4 +147,31 @@ func (m *mail) Delete(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(web.Success("Success delete this email", nil))
+}
+
+// @Summary get all inbox email
+// @ID getAll
+// @Tags mails
+// @Accept json
+// @Produce json
+// @Route /api/mail/inbox
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
+func (m *mail) Inbox(c *fiber.Ctx) error {
+	// get email from parameter
+	getToken := c.Get("Authorization")
+	email, err := m.middleware.GetEmail(getToken)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
+
+	// process get data from email parameter
+	data, err := m.service.Inbox(email)
+	if err != nil {
+		return c.Status(400).JSON(web.BadRequest(err.Error()))
+	}
+
+	// return success
+	return c.Status(200).JSON(web.Success("Success get all mails by this email", data))
 }

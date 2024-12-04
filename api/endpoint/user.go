@@ -25,7 +25,7 @@ type user struct {
 func NewUserAPI(service service.UserInterface) UserInterface {
 	return &user{
 		service:    service,
-		middleware: middleware.NewJWTToken(),
+		middleware: middleware.NewJWTMiddleware(),
 	}
 }
 
