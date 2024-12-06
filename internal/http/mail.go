@@ -66,7 +66,6 @@ func (m *mail) InboxView(c *fiber.Ctx) error {
 }
 
 func (m *mail) ArchiveView(c *fiber.Ctx) error {
-	var response []web.GetMail
 	msgError := fiber.Map{
 		"type": "error",
 	}
@@ -84,37 +83,21 @@ func (m *mail) ArchiveView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	index := view.HomeIndex(response)
+	data, err := m.service.Inbox(getMail)
+	if err != nil {
+		msgError["message"] = "Cannot get Inbox Mail"
+		return flash.WithError(c, msgError).Redirect("/home")
+	}
+
+	index := view.HomeIndex(*data)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	if c.Method() == "GET" {
-		data, err := m.service.Inbox(getMail)
-		if err != nil {
-			msgError["message"] = "Cannot get Inbox Mail"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		err = copier.Copy(&response, data)
-		if err != nil {
-			msgError["message"] = "Cannot parsing value"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		msgSuccess := fiber.Map{
-			"type":    "success",
-			"message": "Success Get Inbox Mail",
-		}
-
-		return flash.WithSuccess(c, msgSuccess).Next()
-	}
 
 	return handler(c)
 }
 
 func (m *mail) SpamView(c *fiber.Ctx) error {
-	var response []web.GetMail
 	msgError := fiber.Map{
 		"type": "error",
 	}
@@ -132,37 +115,21 @@ func (m *mail) SpamView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	index := view.HomeIndex(response)
+	data, err := m.service.Inbox(getMail)
+	if err != nil {
+		msgError["message"] = "Cannot get Inbox Mail"
+		return flash.WithError(c, msgError).Redirect("/home")
+	}
+
+	index := view.HomeIndex(*data)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	if c.Method() == "GET" {
-		data, err := m.service.Inbox(getMail)
-		if err != nil {
-			msgError["message"] = "Cannot get Inbox Mail"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		err = copier.Copy(&response, data)
-		if err != nil {
-			msgError["message"] = "Cannot parsing value"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		msgSuccess := fiber.Map{
-			"type":    "success",
-			"message": "Success Get Inbox Mail",
-		}
-
-		return flash.WithSuccess(c, msgSuccess).Next()
-	}
 
 	return handler(c)
 }
 
 func (m *mail) SentView(c *fiber.Ctx) error {
-	var response []web.GetMail
 	msgError := fiber.Map{
 		"type": "error",
 	}
@@ -180,37 +147,21 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	index := view.HomeIndex(response)
+	data, err := m.service.Inbox(getMail)
+	if err != nil {
+		msgError["message"] = "Cannot get Inbox Mail"
+		return flash.WithError(c, msgError).Redirect("/home")
+	}
+
+	index := view.HomeIndex(*data)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	if c.Method() == "GET" {
-		data, err := m.service.Inbox(getMail)
-		if err != nil {
-			msgError["message"] = "Cannot get Inbox Mail"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		err = copier.Copy(&response, data)
-		if err != nil {
-			msgError["message"] = "Cannot parsing value"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		msgSuccess := fiber.Map{
-			"type":    "success",
-			"message": "Success Get Inbox Mail",
-		}
-
-		return flash.WithSuccess(c, msgSuccess).Next()
-	}
 
 	return handler(c)
 }
 
 func (m *mail) TrashView(c *fiber.Ctx) error {
-	var response []web.GetMail
 	msgError := fiber.Map{
 		"type": "error",
 	}
@@ -228,31 +179,16 @@ func (m *mail) TrashView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	index := view.HomeIndex(response)
+	data, err := m.service.Inbox(getMail)
+	if err != nil {
+		msgError["message"] = "Cannot get Inbox Mail"
+		return flash.WithError(c, msgError).Redirect("/home")
+	}
+
+	index := view.HomeIndex(*data)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	if c.Method() == "GET" {
-		data, err := m.service.Inbox(getMail)
-		if err != nil {
-			msgError["message"] = "Cannot get Inbox Mail"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		err = copier.Copy(&response, data)
-		if err != nil {
-			msgError["message"] = "Cannot parsing value"
-			return flash.WithError(c, msgError).Redirect("/home")
-		}
-
-		msgSuccess := fiber.Map{
-			"type":    "success",
-			"message": "Success Get Inbox Mail",
-		}
-
-		return flash.WithSuccess(c, msgSuccess).Next()
-	}
 
 	return handler(c)
 }
