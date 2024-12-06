@@ -4,8 +4,6 @@ import (
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
-	"github.com/jinzhu/copier"
-	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 	"github.com/rulanugrh/megaclite/view"
