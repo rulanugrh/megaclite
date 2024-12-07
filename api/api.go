@@ -52,7 +52,6 @@ func (a *Api) Run(user endpoint.UserInterface, labeling endpoint.LabelingInterfa
 	labelingRoutes := a.app.Group("/api/labeling")
 	labelingRoutes.Post("/", labeling.Create)
 	labelingRoutes.Get("/:categoryID/:user_id", labeling.FindByCategory)
-	labelingRoutes.Get("/get/:id", labeling.FindByID)
 	labelingRoutes.Put("/update/:id/:categoryID", labeling.UpdateLabel)
 
 	// Running Application

@@ -8,10 +8,9 @@ import (
 )
 
 type LabelingInterface interface {
-	Create(req domain.MailLabelRegister) (*web.GetMailLabel, error)
-	FindByID(id uint) (*web.GetMailLabel, error)
-	FindByCategory(id uint, userID uint) (*[]web.GetMailLabel, error)
-	UpdateLabel(id uint, categoryID uint) (*web.GetMailLabel, error)
+	Create(req domain.MailLabelRegister) (*web.GetMail, error)
+	FindByCategory(id uint, userID uint) (*[]web.GetMail, error)
+	UpdateLabel(id uint, categoryID uint) (*web.GetMail, error)
 }
 
 type labeling struct {
@@ -26,7 +25,7 @@ func NewLabelMailService(repository repository.LabelInterface) LabelingInterface
 	}
 }
 
-func (l *labeling) Create(req domain.MailLabelRegister) (*web.GetMailLabel, error) {
+func (l *labeling) Create(req domain.MailLabelRegister) (*web.GetMail, error) {
 	err := l.validation.Validate(req)
 	if err != nil {
 		return nil, l.validation.ValidationMessage(err)
@@ -37,51 +36,33 @@ func (l *labeling) Create(req domain.MailLabelRegister) (*web.GetMailLabel, erro
 		return nil, web.InternalServerError(err.Error())
 	}
 
-	response := web.GetMailLabel{
-		Category: data.Category.Name,
-		Message:  data.Mail.Message,
-		Title:    data.Mail.Title,
-		Subtitle: data.Mail.Subtitle,
-		From:     data.Mail.From,
-		To:       data.Mail.To,
+	response := web.GetMail{
+		ID:        data.ID,
+		CreatedAt: data.CreatedAt,
+		Title:     data.Mail.Title,
+		Subtitle:  data.Mail.Subtitle,
+		From:      data.Mail.From,
+		To:        data.Mail.To,
 	}
 
 	return &response, nil
 }
 
-func (l *labeling) FindByID(id uint) (*web.GetMailLabel, error) {
-	data, err := l.repository.Get(id)
-	if err != nil {
-		return nil, web.InternalServerError(err.Error())
-	}
-
-	response := web.GetMailLabel{
-		Category: data.Category.Name,
-		Message:  data.Mail.Message,
-		Title:    data.Mail.Title,
-		Subtitle: data.Mail.Subtitle,
-		From:     data.Mail.From,
-		To:       data.Mail.To,
-	}
-
-	return &response, nil
-}
-
-func (l *labeling) FindByCategory(id uint, userID uint) (*[]web.GetMailLabel, error) {
-	var response []web.GetMailLabel
+func (l *labeling) FindByCategory(id uint, userID uint) (*[]web.GetMail, error) {
+	var response []web.GetMail
 	data, err := l.repository.GetByCategory(id, userID)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
 
 	for _, mails := range *data {
-		mail := web.GetMailLabel{
-			Category: mails.Category.Name,
-			Message:  mails.Mail.Message,
-			Title:    mails.Mail.Title,
-			Subtitle: mails.Mail.Subtitle,
-			From:     mails.Mail.From,
-			To:       mails.Mail.To,
+		mail := web.GetMail{
+			ID:        mails.Mail.ID,
+			CreatedAt: mails.Mail.CreatedAt,
+			Title:     mails.Mail.Title,
+			Subtitle:  mails.Mail.Subtitle,
+			From:      mails.Mail.From,
+			To:        mails.Mail.To,
 		}
 
 		response = append(response, mail)
@@ -90,19 +71,19 @@ func (l *labeling) FindByCategory(id uint, userID uint) (*[]web.GetMailLabel, er
 	return &response, nil
 }
 
-func (l *labeling) UpdateLabel(id uint, categoryID uint) (*web.GetMailLabel, error) {
+func (l *labeling) UpdateLabel(id uint, categoryID uint) (*web.GetMail, error) {
 	data, err := l.repository.UpdateLabel(id, categoryID)
 	if err != nil {
 		return nil, web.InternalServerError(err.Error())
 	}
 
-	response := web.GetMailLabel{
-		Category: data.Category.Name,
-		Message:  data.Mail.Message,
-		Title:    data.Mail.Title,
-		Subtitle: data.Mail.Subtitle,
-		From:     data.Mail.From,
-		To:       data.Mail.To,
+	response := web.GetMail{
+		ID:        data.ID,
+		CreatedAt: data.CreatedAt,
+		Title:     data.Mail.Title,
+		Subtitle:  data.Mail.Subtitle,
+		From:      data.Mail.From,
+		To:        data.Mail.To,
 	}
 
 	return &response, nil

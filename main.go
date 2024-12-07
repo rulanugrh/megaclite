@@ -67,6 +67,7 @@ func main() {
 	labelingRepository := repository.NewLabelMailRepository(*connectionDB)
 	labelingService := service.NewLabelMailService(labelingRepository)
 	labelingAPI := endpoint.NewLabelMailAPI(labelingService)
+	labelingView := handler.NewLabelView(labelingService)
 
 	// parsing argument command
 	args := os.Args[1]
@@ -77,7 +78,7 @@ func main() {
 	} else if args == "api" {
 		apiRoute.Run(userAPI, labelingAPI, mailAPI, categoryAPI)
 	} else if args == "serve" {
-		viewRoute.Run(userView, mailView)
+		viewRoute.Run(userView, mailView, labelingView)
 	} else {
 		help_command()
 	}

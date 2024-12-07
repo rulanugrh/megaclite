@@ -11,6 +11,7 @@ import (
 type JWTInterface interface {
 	GenerateToken(request web.ResponseLogin) (*string, error)
 	GetEmail(token string) (string, error)
+	GetUserID(token string) (uint, error)
 }
 
 type jwtclaim struct {
@@ -73,4 +74,13 @@ func (j *jsonwebtoken) GetEmail(token string) (string, error) {
 	}
 
 	return claim.Email, nil
+}
+
+func (j *jsonwebtoken) GetUserID(token string) (uint, error) {
+	claim, err := j.captureToken(token)
+	if err != nil {
+		return 0, web.InternalServerError(err.Error())
+	}
+
+	return claim.UserID, nil
 }

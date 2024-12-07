@@ -54,11 +54,14 @@ func (m *mail) InboxView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data)
+	index := view.HomeIndex(*data, "5")
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 
+	if c.Method() == "POST" {
+
+	}
 	return handler(c)
 
 }
@@ -87,7 +90,7 @@ func (m *mail) ArchiveView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data)
+	index := view.HomeIndex(*data, "4")
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
@@ -119,7 +122,7 @@ func (m *mail) SpamView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data)
+	index := view.HomeIndex(*data, "3")
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
@@ -145,13 +148,13 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	data, err := m.service.Inbox(getMail)
+	data, err := m.service.Sent(getMail)
 	if err != nil {
-		msgError["message"] = "Cannot get Inbox Mail"
-		return flash.WithError(c, msgError).Redirect("/home")
+		msgError["message"] = "Cannot get Sent Mail"
+		return flash.WithError(c, msgError).Redirect("/home/sent")
 	}
 
-	index := view.HomeIndex(*data)
+	index := view.HomeIndex(*data, "2")
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
@@ -183,7 +186,7 @@ func (m *mail) TrashView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data)
+	index := view.HomeIndex(*data, "1")
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))

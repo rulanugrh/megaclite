@@ -10,7 +10,6 @@ import (
 
 type LabelInterface interface {
 	Create(req domain.MailLabelRegister) (*domain.MailLabel, error)
-	Get(id uint) (*domain.MailLabel, error)
 	UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error)
 	GetByCategory(categoryID uint, userID uint) (*[]domain.MailLabel, error)
 }
@@ -42,17 +41,6 @@ func (l *label) Create(req domain.MailLabelRegister) (*domain.MailLabel, error) 
 	return &response, nil
 }
 
-func (l *label) Get(id uint) (*domain.MailLabel, error) {
-	var response domain.MailLabel
-	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE id = ?", id).Scan(&response).Error
-
-	if err != nil {
-		return nil, web.InternalServerError("Cannot get mail with this id")
-	}
-
-	return &response, nil
-}
-
 func (l *label) UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error) {
 	var response domain.MailLabel
 	err := l.connection.DB.Exec("UPDATE mail_labels SET category_id = ? WHERE id = ?", categoryID, id).Find(&response).Error
@@ -66,7 +54,7 @@ func (l *label) UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error)
 
 func (l *label) GetByCategory(categoryID uint, userID uint) (*[]domain.MailLabel, error) {
 	var response []domain.MailLabel
-	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE category_id = ? AND user_id = ?", categoryID, userID).Scan(&response).Error
+	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE category_id = ? AND user_id = ?", categoryID, userID).Preload("Mail").Scan(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("Cannot get mail with this id")

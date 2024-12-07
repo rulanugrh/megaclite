@@ -11,7 +11,6 @@ import (
 
 type LabelingInterface interface {
 	Create(c *fiber.Ctx) error
-	FindByID(c *fiber.Ctx) error
 	FindByCategory(c *fiber.Ctx) error
 	UpdateLabel(c *fiber.Ctx) error
 }
@@ -54,36 +53,6 @@ func (l *labeling) Create(c *fiber.Ctx) error {
 
 	// return response json while success created
 	return c.Status(201).JSON(web.Created("Success Create New Label Mail", data))
-}
-
-// @Summary find label by id
-// @ID findByID
-// @Tags labelings
-// @Accept json
-// @Produce json
-// @Param id path int true "id label"
-// @Router /api/label/find/{id} [get]
-// @Success 201 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 500 {object} web.Response
-func (l *labeling) FindByID(c *fiber.Ctx) error {
-	// get parameter from url
-	getID := c.Params("id")
-	// convert string to integer
-	id, err := strconv.Atoi(getID)
-	// checking error while parsing request id
-	if err != nil {
-		return c.Status(500).JSON(web.InternalServerError("Cannot Parsing ID"))
-	}
-
-	// process get data in service layer
-	data, err := l.service.FindByID(uint(id))
-	if err != nil {
-		return c.Status(400).JSON(web.BadRequest(err.Error()))
-	}
-
-	// return success if success get data
-	return c.Status(200).JSON(web.Success("Success Get Mail with This ID", data))
 }
 
 // @Summary find by category

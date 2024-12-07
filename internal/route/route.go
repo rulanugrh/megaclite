@@ -11,7 +11,7 @@ import (
 )
 
 type RouteViewInterface interface {
-	Run(user handler.UserView, mail handler.MailView)
+	Run(user handler.UserView, mail handler.MailView, label handler.LabelingView)
 }
 
 type viewRoute struct {
@@ -30,7 +30,7 @@ func NewViewRoute(conf *config.App, middleware middleware.CommonMiddlewareInterf
 	}
 }
 
-func (v *viewRoute) Run(user handler.UserView, mail handler.MailView) {
+func (v *viewRoute) Run(user handler.UserView, mail handler.MailView, label handler.LabelingView) {
 	v.app.Static("/assets", "./view/assets")
 	// Views User
 	v.app.Get("/", user.LoginView)
@@ -40,6 +40,9 @@ func (v *viewRoute) Run(user handler.UserView, mail handler.MailView) {
 
 	// Home Index
 	v.app.Get("/home", v.commonMiddleware.ViewMiddleware, mail.InboxView)
+
+	// Label Index
+	v.app.Post("/label/add/:categoryID/:id", v.commonMiddleware.ViewMiddleware, label.Add)
 	// Running Application
 	err := v.app.Listen(fmt.Sprintf("%s:%s", v.conf.Server.Host, v.conf.Server.ViewPort))
 	if err != nil {
