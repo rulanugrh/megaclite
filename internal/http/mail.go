@@ -1,6 +1,12 @@
 package handler
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
@@ -14,10 +20,7 @@ import (
 
 type MailView interface {
 	InboxView(c *fiber.Ctx) error
-	ArchiveView(c *fiber.Ctx) error
-	SpamView(c *fiber.Ctx) error
 	SentView(c *fiber.Ctx) error
-	TrashView(c *fiber.Ctx) error
 	AddMail(c *fiber.Ctx) error
 }
 
@@ -57,7 +60,7 @@ func (m *mail) InboxView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data, "5")
+	index := view.HomeIndex(*data, "5", getMail)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
@@ -67,70 +70,6 @@ func (m *mail) InboxView(c *fiber.Ctx) error {
 	}
 	return handler(c)
 
-}
-
-func (m *mail) ArchiveView(c *fiber.Ctx) error {
-	msgError := fiber.Map{
-		"type": "error",
-	}
-
-	token := c.Locals("Authorization").(string)
-	getMail, err := m.middleware.GetEmail(token)
-	if err != nil {
-		msgError["message"] = err.Error()
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	var check bool = getMail != ""
-	if !check {
-		msgError["message"] = "Sorry you token is invalid"
-		return flash.WithError(c, msgError).Redirect("/")
-	}
-
-	data, err := m.service.Inbox(getMail)
-	if err != nil {
-		msgError["message"] = "Cannot get Inbox Mail"
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	index := view.HomeIndex(*data, "4")
-	views := view.Home("Inbox", false, flash.Get(c), check, index)
-
-	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	return handler(c)
-}
-
-func (m *mail) SpamView(c *fiber.Ctx) error {
-	msgError := fiber.Map{
-		"type": "error",
-	}
-
-	token := c.Locals("Authorization").(string)
-	getMail, err := m.middleware.GetEmail(token)
-	if err != nil {
-		msgError["message"] = err.Error()
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	var check bool = getMail != ""
-	if !check {
-		msgError["message"] = "Sorry you token is invalid"
-		return flash.WithError(c, msgError).Redirect("/")
-	}
-
-	data, err := m.service.Inbox(getMail)
-	if err != nil {
-		msgError["message"] = "Cannot get Inbox Mail"
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	index := view.HomeIndex(*data, "3")
-	views := view.Home("Inbox", false, flash.Get(c), check, index)
-
-	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	return handler(c)
 }
 
 func (m *mail) SentView(c *fiber.Ctx) error {
@@ -157,40 +96,8 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home/sent")
 	}
 
-	index := view.HomeIndex(*data, "2")
-	views := view.Home("Inbox", false, flash.Get(c), check, index)
-
-	handler := adaptor.HTTPHandler(templ.Handler(views))
-
-	return handler(c)
-}
-
-func (m *mail) TrashView(c *fiber.Ctx) error {
-	msgError := fiber.Map{
-		"type": "error",
-	}
-
-	token := c.Locals("Authorization").(string)
-	getMail, err := m.middleware.GetEmail(token)
-	if err != nil {
-		msgError["message"] = err.Error()
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	var check bool = getMail != ""
-	if !check {
-		msgError["message"] = "Sorry you token is invalid"
-		return flash.WithError(c, msgError).Redirect("/")
-	}
-
-	data, err := m.service.Inbox(getMail)
-	if err != nil {
-		msgError["message"] = "Cannot get Inbox Mail"
-		return flash.WithError(c, msgError).Redirect("/home")
-	}
-
-	index := view.HomeIndex(*data, "1")
-	views := view.Home("Inbox", false, flash.Get(c), check, index)
+	index := mailview.SentIndex(*data)
+	views := mailview.SentMail("| Sent Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 
@@ -215,35 +122,54 @@ func (m *mail) AddMail(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/")
 	}
 
-	index := mailview.AddMailIndex(getMail)
-	views := mailview.AddMail("Add Mail", false, flash.Get(c), check, index)
-
-	handler := adaptor.HTTPHandler(templ.Handler(views))
-
 	if c.Method() == "POST" {
-		request := domain.MailRegister{
-			From:     getMail,
-			To:       c.FormValue("to-people"),
-			Message:  c.FormValue("message"),
-			Title:    c.FormValue("title"),
-			Subtitle: c.FormValue("subtitle"),
+
+		form, err := c.MultipartForm()
+		if err != nil {
+			msgError["message"] = "Invalid handler multi part form"
+			return flash.WithError(c, msgError).Redirect("/")
 		}
 
-		_, err := m.service.Create(request)
+		files := form.File["attachments"]
+
+		var filenames []string
+		for _, file := range files {
+			pwd, _ := os.Getwd()
+			err := c.SaveFile(file, fmt.Sprintf("%s\\view\\public\\%d-%s", pwd, time.Now().Unix(), file.Filename))
+			if err != nil {
+				msgError["message"] = "Error while save attachment"
+				log.Println(err.Error())
+				return flash.WithError(c, msgError).Next()
+			}
+
+			filenames = append(filenames, fmt.Sprintf("%s\\view\\public\\%d-%s", pwd, time.Now().Unix(), file.Filename))
+		}
+
+		request := domain.MailRegister{
+			From:       getMail,
+			To:         c.FormValue("to-people"),
+			Message:    c.FormValue("message"),
+			Title:      c.FormValue("title"),
+			Subtitle:   c.FormValue("subtitle"),
+			Attachment: strings.Join(filenames, ","),
+		}
+
+		data, err := m.service.Create(request)
 		if err != nil {
+			log.Println(err.Error())
 			return flash.WithError(c, fiber.Map{
 				"type":    "error",
 				"message": err.Error(),
-			}).Redirect("/mail/add")
+			}).Next()
 		}
 
 		success := fiber.Map{
 			"type":    "success",
-			"message": "success create mail",
+			"message": "success create mail " + data.From,
 		}
-
 		return flash.WithSuccess(c, success).Redirect("/home")
 	}
 
-	return handler(c)
+	return flash.WithSuccess(c, fiber.Map{"type": "success"}).Next()
+
 }

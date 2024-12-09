@@ -10,11 +10,11 @@ type Mail struct {
 	gorm.Model
 	From       string
 	To         string
-	Message    string          `gorm:"type:text"`
-	Title      string          `gorm:"type:varchar(100)"`
-	Subtitle   string          `gorm:"type:varchar(100)"`
-	Attachment MultiAttachment `gorm:"type:text"`
-	Star       bool            `gorm:"default:false"`
+	Message    string `gorm:"type:text"`
+	Title      string `gorm:"type:varchar(100)"`
+	Subtitle   string `gorm:"type:varchar(100)"`
+	Attachment string `gorm:"type:text"`
+	Star       bool   `gorm:"default:false"`
 }
 
 type MailLabel struct {
@@ -27,13 +27,13 @@ type MailLabel struct {
 }
 
 type MailRegister struct {
-	From       string   `json:"from" form:"from"`
-	To         string   `json:"to" form:"to" validate:"required"`
-	Message    string   `json:"message" form:"message" validate:"required"`
-	Title      string   `json:"title" form:"title" validate:"required"`
-	Subtitle   string   `json:"subtitle" form:"subtitle" validate:"required"`
-	Attachment []string `json:"attachment" form:"attachment"`
-	Star       bool     `json:"star" form:"star"`
+	From       string `json:"from" form:"from"`
+	To         string `json:"to" form:"to" validate:"required"`
+	Message    string `json:"message" form:"message" validate:"required"`
+	Title      string `json:"title" form:"title" validate:"required"`
+	Subtitle   string `json:"subtitle" form:"subtitle" validate:"required"`
+	Attachment string `json:"attachment" form:"attachment"`
+	Star       bool   `json:"star" form:"star"`
 }
 
 type MailLabelRegister struct {

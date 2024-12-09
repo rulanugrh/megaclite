@@ -27,3 +27,6 @@ go.sum
 
 # Ingore templ generated
 **/*_templ.go
+
+# Ignore public
+view/public/*

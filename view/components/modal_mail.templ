@@ -1,0 +1,53 @@
+package components
+
+templ ModalMail(email string) {
+    <dialog id="my_modal_1" class="modal">
+        <div class="modal-box max-w-7xl">
+            <h1 class="lg:text-2xl text-lg font-bold">New Message</h1>
+            <hr class="my-3 border-gray-300 dark:border-gray-700 sm:mx-auto dark:border-putih lg:my-3">
+            <form action="/mail/add" method="POST" hx-swap="transition:true" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="from" id="from"
+                        class="block dark:text-lightColor text-base lg:text-lg text-darkColor font-jetBrains mb-2">From</label>
+                    <input type="email" id="from" name="from"
+                        class="font-jetBrains dark:bg-gray-700 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
+                        autocomplete="off" value={ email } readonly/>
+                </div>
+                <div class="mb-4">
+                    <label for="to-people" id="to-people" class="block text-base lg:text-lg dark:text-lightColor text-darkColor mb-2">Email</label>
+                    <input type="email" id="to-people" name="to-people"
+                        class="font-jetBrains dark:bg-gray-800 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
+                        autocomplete="off" required placeholder="jane@megaclite.com" />
+                </div>
+                <div class="mb-4">
+                    <label for="title" id="title" class="block text-base lg:text-lg dark:text-lightColor text-darkColor mb-2">Title</label>
+                    <input type="text" id="title" name="title"
+                        class="font-jetBrains dark:bg-gray-800 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
+                        autocomplete="off" required placeholder="Enter your title" />
+                </div>
+                <div class="mb-4">
+                    <label for="subtitle" id="subtitle" class="block text-base lg:text-lg dark:text-lightColor text-darkColor mb-2">Subtitle</label>
+                    <input type="text" id="subtitle" name="subtitle"
+                        class="font-jetBrains dark:bg-gray-800 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
+                        autocomplete="off" required placeholder="Enter your subtitle" />
+                </div>
+                <div class="mb-4">
+                    <label for="message" id="message" class="block text-base lg:text-lg dark:text-lightColor text-darkColor mb-2">Message</label>
+                    <textarea type="text" id="message" name="message" class="textarea w-full h-[100px] font-jetBrains dark:bg-gray-800 dark:text-lightColor border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600" required placeholder="Enter your message" ></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="attachments" id="attachments" class="block text-base lg:text-lg dark:text-lightColor text-darkColor mb-2">Attachment</label>
+                    <input type="file" id="attachments" name="attachments" multiple class="font-jetBrains dark:bg-gray-800 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600" />
+                </div>
+                <button type="submit"
+                    class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Sent</button>
+            </form>
+            <div class="modal-action">
+                <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+}

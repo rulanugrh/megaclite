@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"time"
+	"log"
 
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
@@ -27,22 +27,22 @@ func NewMailRepository(conn config.Database) MailInterface {
 }
 
 func (m *mail) Create(req domain.MailRegister) (*domain.Mail, error) {
-	var response domain.Mail
-	err := m.connection.DB.Exec("INSERT INTO mails(created_at, updated_at, `from`, `to`, message, title, subtitle) VALUES(?, ?, ?, ?, ?, ?, ?)",
-		time.Now(),
-		time.Now(),
-		req.From,
-		req.To,
-		req.Message,
-		req.Title,
-		req.Subtitle,
-	).Find(&response).Error
+	request := domain.Mail{
+		From:       req.From,
+		To:         req.To,
+		Title:      req.Title,
+		Subtitle:   req.Subtitle,
+		Attachment: req.Attachment,
+		Message:    req.Message,
+	}
+	err := m.connection.DB.Create(&request).Error
 
 	if err != nil {
+		log.Println(err)
 		return nil, web.InternalServerError("Cannot create mail")
 	}
 
-	return &response, nil
+	return &request, nil
 }
 
 func (m *mail) Get(id uint) (*domain.Mail, error) {
