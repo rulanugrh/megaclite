@@ -1,12 +1,11 @@
-package view
+package mailview
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/view"
-	"github.com/rulanugrh/megaclite/internal/entity/domain"
 )
 
-templ AddMailIndex(req domain.MailRegister) {
+templ AddMailIndex(email string) {
 	<div id="mainContent" class="flex-1 md:ml-80 lg:p-8 content">
 		<!-- Hamburger Button (Visible on small screens) -->
 		<button id="hamburgerButton" class="md:hidden p-4 text-gray-800 dark:text-white  mb-6">

@@ -74,3 +74,7 @@ func (l *labeling) Add(c *fiber.Ctx) error {
 		"message": "Success add mail to label",
 	}).Next()
 }
+
+// func (l *labeling) SpamView(c *fiber.Ctx) error {
+
+// }

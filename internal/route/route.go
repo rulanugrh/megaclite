@@ -40,6 +40,9 @@ func (v *viewRoute) Run(user handler.UserView, mail handler.MailView, label hand
 
 	// Home Index
 	v.app.Get("/home", v.commonMiddleware.ViewMiddleware, mail.InboxView)
+	// Mail Index
+	v.app.Get("/mail/add", v.commonMiddleware.ViewMiddleware, mail.AddMail)
+	v.app.Post("/mail/add", v.commonMiddleware.ViewMiddleware, mail.AddMail)
 
 	// Label Index
 	v.app.Post("/label/add/:categoryID/:id", v.commonMiddleware.ViewMiddleware, label.Add)
