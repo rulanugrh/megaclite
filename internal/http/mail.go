@@ -14,7 +14,6 @@ import (
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 	"github.com/rulanugrh/megaclite/view"
-	"github.com/rulanugrh/megaclite/view/mailview"
 	"github.com/sujit-baniya/flash"
 )
 
@@ -96,8 +95,8 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home/sent")
 	}
 
-	index := mailview.SentIndex(*data)
-	views := mailview.SentMail("| Sent Mail", false, flash.Get(c), check, index)
+	index := view.MailViewIndex(*data)
+	views := view.MailView("| Sent Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 

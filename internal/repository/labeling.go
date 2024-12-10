@@ -54,7 +54,7 @@ func (l *label) UpdateLabel(id uint, categoryID uint) (*domain.MailLabel, error)
 
 func (l *label) GetByCategory(categoryID uint, userID uint) (*[]domain.MailLabel, error) {
 	var response []domain.MailLabel
-	err := l.connection.DB.Raw("SELECT * FROM mail_labels WHERE category_id = ? AND user_id = ?", categoryID, userID).Preload("Mail").Scan(&response).Error
+	err := l.connection.DB.Where("category_id = ?", categoryID).Where("user_id = ?", userID).Preload("Mail").Find(&response).Error
 
 	if err != nil {
 		return nil, web.InternalServerError("Cannot get mail with this id")

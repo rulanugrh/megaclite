@@ -16,7 +16,7 @@ templ Navbar() {
                         <h2 class="uppercase font-semibold px-4 text-gray-400">Mail Management</h2>
                         <ul id="mail" class="flex flex-col mt-2">
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                <a href="/home" class="block px-4 py-2 hover:bg-gray-700 rounded">
                                     <i class="fa-solid fa-inbox text-xl">
                                         <span class="font-jetBrains ml-2 font-normal ">Inbox</span>
                                     </i>
@@ -32,14 +32,22 @@ templ Navbar() {
                             </li>
 
                             <li>
-                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                <a href="/home/favorite" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                    <i class="fa-solid fa-star text-xl">
+                                        <span class="font-jetBrains ml-2 font-normal ">Favorite</span>
+                                    </i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="/home/spam" class="block px-4 py-2 hover:bg-gray-700 rounded">
                                     <i class="fa-solid fa-circle-exclamation text-xl">
                                         <span class="font-jetBrains ml-2 font-normal ">Spam</span>
                                     </i>
                                 </a>
                             </li>
                             <li>
-                                <a href="" class="block px-4 py-2 hover:bg-gray-700 rounded">
+                                <a href="/home/trash" class="block px-4 py-2 hover:bg-gray-700 rounded">
                                     <i class="fa-solid fa-trash text-xl">
                                         <span class="font-jetBrains ml-2 font-normal ">Trash</span>
                                     </i>

@@ -1,12 +1,11 @@
-package mailview
+package view
 
 import "github.com/rulanugrh/megaclite/internal/entity/web"
 import "github.com/rulanugrh/megaclite/view/components"
-import "github.com/rulanugrh/megaclite/view"
 import "github.com/rulanugrh/megaclite/view/partials"
 import "github.com/gofiber/fiber/v2"
 
-templ SentIndex(data []web.GetMail) {
+templ MailViewIndex(data []web.GetMail) {
     <div id="mainContent" class="flex-1 md:ml-80 lg:p-8 content">
 		<!-- Hamburger Button (Visible on small screens) -->
 		<button id="hamburgerButton" class="md:hidden p-4 text-gray-800 dark:text-white  mb-6">
@@ -17,15 +16,15 @@ templ SentIndex(data []web.GetMail) {
 				for _, dt := range data {
                     @components.CardMail(dt)
 				}
-			} else if len(data) <= 0 {
+			} else {
 			    @partials.NotHaveMail()
             }
 		</div>
 	</div>
 }
 
-templ SentMail(page string, isError bool, msg fiber.Map, authorize bool, cmp templ.Component) {
-	@view.Layout(page, msg, isError, authorize) {
+templ MailView(page string, isError bool, msg fiber.Map, authorize bool, cmp templ.Component) {
+	@Layout(page, msg, isError, authorize) {
 		@cmp
 	}
 }
