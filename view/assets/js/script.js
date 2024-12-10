@@ -13,9 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeSidebar() {
         sidebar.classList.add('-translate-x-full'); // Hide sidebar
         hamburgerIcon.style.display = 'block'; // Show hamburger icon again
-        closeButton.style.display = 'none'; // Hide close button (X)
-        mainContent.classList.remove('ml-64'); // Restore main content layout
-        mainContent.classList.remove('bg-gray-200'); // Reset background color
+        if (window.innerWidth >= 1024) { // Large screen
+            closeButton.style.display = 'block'; // Always display close button on large screens
+        } else { // Small screen
+            closeButton.style.display = 'none'; // Hide close button on small screens
+        }
+        mainContent.classList.remove('ml-80'); // Restore main content layout
     }
 
     // Toggle the sidebar visibility when the hamburger button is clicked
@@ -23,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.remove('-translate-x-full'); // Show sidebar
         hamburgerIcon.style.display = 'none'; // Hide hamburger icon
         closeButton.style.display = 'block'; // Show close button (X)
-        mainContent.classList.add('ml-64'); // Shift the main content when sidebar is open
-        mainContent.classList.add('bg-gray-200'); // Change background color when sidebar is open
+        mainContent.classList.add('ml-80'); // Shift the main content when sidebar is open
     });
 
     // Close the sidebar when the close button (X) is clicked
