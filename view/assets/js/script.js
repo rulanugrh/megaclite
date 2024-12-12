@@ -1,41 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get references to elements
+    // create new variabel for catch element by id
     const sidebar = document.getElementById('sidebar');
     const hamburgerButton = document.getElementById('hamburgerButton');
     const hamburgerIcon = document.getElementById('hamburgerIcon');
     const closeButton = document.getElementById('closeButton');
     const mainContent = document.getElementById('mainContent');
 
-    // Get all sidebar menu items
+    // variabel for get all items in navbar
     const sidebarItems = document.querySelectorAll('#mail a');
     
-    // Function to close sidebar
+    // function to close navbar
     function closeSidebar() {
-        sidebar.classList.add('-translate-x-full'); // Hide sidebar
-        hamburgerIcon.style.display = 'block'; // Show hamburger icon again
-        if (window.innerWidth >= 1024) { // Large screen
-            closeButton.style.display = 'block'; // Always display close button on large screens
+        sidebar.classList.add('-translate-x-full');
+        hamburgerIcon.style.display = 'block'; 
+
+        // condition to style close button in large and small screen
+        if (window.innerWidth >= 1024) {
+            closeButton.style.display = 'block';
         } else { // Small screen
-            closeButton.style.display = 'none'; // Hide close button on small screens
+            closeButton.style.display = 'none';
         }
-        mainContent.classList.remove('ml-80'); // Restore main content layout
+        mainContent.classList.remove('ml-80');
     }
 
-    // Toggle the sidebar visibility when the hamburger button is clicked
     hamburgerButton.addEventListener('click', () => {
-        sidebar.classList.remove('-translate-x-full'); // Show sidebar
-        hamburgerIcon.style.display = 'none'; // Hide hamburger icon
-        closeButton.style.display = 'block'; // Show close button (X)
-        mainContent.classList.add('ml-80'); // Shift the main content when sidebar is open
+        sidebar.classList.remove('-translate-x-full'); 
+        hamburgerIcon.style.display = 'none';
+        closeButton.style.display = 'block'; 
+        mainContent.classList.add('ml-80');
     });
 
-    // Close the sidebar when the close button (X) is clicked
     closeButton.addEventListener('click', () => {
-        closeSidebar(); // Use the closeSidebar function
+        closeSidebar();
     });
 
-    // Close the sidebar when a sidebar menu item is clicked
     sidebarItems.forEach(item => {
-        item.addEventListener('click', closeSidebar); // Close the sidebar when any item is clicked
+        item.addEventListener('click', closeSidebar);
     });
 });
