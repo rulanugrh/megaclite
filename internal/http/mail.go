@@ -59,7 +59,7 @@ func (m *mail) InboxView(c *fiber.Ctx) error {
 		return flash.WithError(c, msgError).Redirect("/home")
 	}
 
-	index := view.HomeIndex(*data, "5", getMail)
+	index := view.HomeIndex(*data, getMail)
 	views := view.Home("Inbox", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))

@@ -1,5 +1,10 @@
 package web
 
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/sujit-baniya/flash"
+)
+
 type Response struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
@@ -60,4 +65,26 @@ func BadRequest(msg string) Response {
 		Message: msg,
 		Data:    nil,
 	}
+}
+
+func RedirectView(c *fiber.Ctx, msg string, redirect string) error {
+	return flash.WithError(c, fiber.Map{
+		"type":    "error",
+		"message": msg,
+	}).Redirect(redirect)
+}
+
+func NextView(c *fiber.Ctx, msg string) error {
+	return flash.WithError(c, fiber.Map{
+		"type":    "error",
+		"message": msg,
+	}).Next()
+}
+
+func SuccessView(c *fiber.Ctx, msg string, data interface{}, redirect string) error {
+	return flash.WithError(c, fiber.Map{
+		"type":    "error",
+		"message": msg,
+		"data":    data,
+	}).Redirect(redirect)
 }

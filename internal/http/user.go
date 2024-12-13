@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"io"
 	"log"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
+	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 	"github.com/rulanugrh/megaclite/view/auth"
@@ -18,6 +20,8 @@ import (
 type UserView interface {
 	RegisterView(c *fiber.Ctx) error
 	LoginView(c *fiber.Ctx) error
+	ProfileView(c *fiber.Ctx) error
+	Logout(c *fiber.Ctx) error
 }
 
 type user struct {
@@ -49,12 +53,7 @@ func (u *user) RegisterView(c *fiber.Ctx) error {
 
 		data, err := u.service.Register(request)
 		if err != nil {
-			fm := fiber.Map{
-				"type":    "error",
-				"message": err.Error(),
-			}
-
-			return flash.WithError(c, fm).Redirect("/")
+			return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/register")
 		}
 
 		// Mengirim file JSON
@@ -97,51 +96,57 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 
 		data, err := u.service.Login(request, string(content))
 		if err != nil {
-			fm := fiber.Map{
-				"type":    "error",
-				"message": err.Error(),
-			}
-
-			return flash.WithError(c, fm).Redirect("/")
+			return web.RedirectView(c, err.Error(), "/")
 		}
 
 		token, err := u.middleware.GenerateToken(*data)
 		if err != nil {
-			fm := fiber.Map{
-				"type":    "error",
-				"message": err.Error(),
-			}
-
-			return flash.WithError(c, fm).Redirect("/")
+			return web.RedirectView(c, err.Error(), "/")
 		}
 
 		session, err := u.conf.Store.Get(c)
 		if err != nil {
-			fm := fiber.Map{
-				"type":    "error",
-				"message": "Cannot create new Session",
-			}
-
-			return flash.WithError(c, fm).Redirect("/")
+			return web.RedirectView(c, "cannot create new session", "/")
 		}
 
 		session.Set("Authorization", token)
 		err = session.Save()
 
 		if err != nil {
-			return flash.WithError(c, fiber.Map{
-				"type":    "error",
-				"message": "Cannot save session",
-			}).Redirect("/")
+			return web.RedirectView(c, "cannot save new session", "/")
 		}
 
-		fm := fiber.Map{
-			"type":    "success",
-			"message": "Success Login Account",
-		}
-
-		return flash.WithSuccess(c, fm).Redirect("/home")
+		return web.SuccessView(c, "Success Login Account", data, "/home")
 	}
 
 	return handler(c)
+}
+
+func (u *user) ProfileView(c *fiber.Ctx) error {
+	token := c.Locals("Authorization").(string)
+	id, err := u.middleware.GetUserID(token)
+	if err != nil {
+		return web.RedirectView(c, err.Error(), "/home")
+	}
+
+	data, err := u.service.GetByID(id)
+	if err != nil {
+		return web.RedirectView(c, err.Error(), "/home")
+	}
+
+	return web.SuccessView(c, "success get account", data, "/home/profile")
+}
+
+func (u *user) Logout(c *fiber.Ctx) error {
+	session, err := u.conf.Store.Get(c)
+	if err != nil {
+		return web.RedirectView(c, "Session Not found", "/login")
+	}
+
+	err = session.Destroy()
+	if err != nil {
+		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
+	}
+
+	return web.SuccessView(c, "Success Logout", nil, "/login")
 }
