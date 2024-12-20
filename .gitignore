@@ -30,3 +30,4 @@ go.sum
 
 # Ignore public
 view/public/*
+test.html

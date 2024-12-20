@@ -6,6 +6,7 @@ type GetUser struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Address  string `json:"address"`
+	Avatar   string `json:"avatar"`
 }
 
 type ResponseLogin struct {
