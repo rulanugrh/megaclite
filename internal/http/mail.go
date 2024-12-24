@@ -96,7 +96,7 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 	}
 
 	index := view.MailViewIndex(*data)
-	views := view.MailView("| Sent Mail", false, flash.Get(c), check, index)
+	views := view.MailView("Sent Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 

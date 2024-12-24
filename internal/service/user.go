@@ -110,6 +110,7 @@ func (u *user) GetEmail(email string) (*web.GetUser, error) {
 		Email:    data.Email,
 		Address:  data.Address,
 		Avatar:   data.Avatar,
+		KeyID:    data.KeygenID,
 	}
 
 	return &response, nil
@@ -126,6 +127,7 @@ func (u *user) GetByID(id uint) (*web.GetUser, error) {
 		Email:    data.Email,
 		Address:  data.Address,
 		Avatar:   data.Avatar,
+		KeyID:    data.KeygenID,
 	}
 
 	return &response, nil

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
@@ -71,6 +73,7 @@ func (u *user) GetMail(email string) (*domain.User, error) {
 
 	err := u.connection.DB.Raw("SELECT * FROM users WHERE email = ?", email).Scan(&response).Error
 	if err != nil {
+		log.Println(err.Error())
 		return nil, web.InternalServerError("Cant find user with this email")
 	}
 

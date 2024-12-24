@@ -83,7 +83,7 @@ func NextView(c *fiber.Ctx, msg string) error {
 
 func SuccessView(c *fiber.Ctx, msg string, data interface{}, redirect string) error {
 	return flash.WithError(c, fiber.Map{
-		"type":    "error",
+		"type":    "success",
 		"message": msg,
 		"data":    data,
 	}).Redirect(redirect)

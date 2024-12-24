@@ -13,6 +13,7 @@ import (
 	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
+	"github.com/rulanugrh/megaclite/view"
 	"github.com/rulanugrh/megaclite/view/auth"
 	"github.com/sujit-baniya/flash"
 )
@@ -123,18 +124,33 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 }
 
 func (u *user) ProfileView(c *fiber.Ctx) error {
-	token := c.Locals("Authorization").(string)
-	id, err := u.middleware.GetUserID(token)
+	token, checks := c.Locals("Authorization").(string)
+	if !checks {
+		log.Println(token)
+	}
+	log.Println(token)
+	getEmail, err := u.middleware.GetEmail(token)
 	if err != nil {
+		log.Println(err)
 		return web.RedirectView(c, err.Error(), "/home")
 	}
 
-	data, err := u.service.GetByID(id)
+	var check bool = getEmail != ""
+	if !check {
+		return web.RedirectView(c, "Sorry your token is invalid", "/home")
+	}
+
+	data, err := u.service.GetEmail(getEmail)
 	if err != nil {
+		log.Println(err)
 		return web.RedirectView(c, err.Error(), "/home")
 	}
 
-	return web.SuccessView(c, "success get account", data, "/home/profile")
+	index := view.ProfileIndex(*data)
+	views := view.ProfileView("Login View", false, flash.Get(c), check, index)
+
+	handler := adaptor.HTTPHandler(templ.Handler(views))
+	return handler(c)
 }
 
 func (u *user) Logout(c *fiber.Ctx) error {

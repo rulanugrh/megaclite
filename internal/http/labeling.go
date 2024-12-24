@@ -86,7 +86,7 @@ func (l *labeling) SpamView(c *fiber.Ctx) error {
 	}
 
 	index := view.MailViewIndex(*data)
-	views := view.MailView("| Spam Mail", false, flash.Get(c), check, index)
+	views := view.MailView("Spam Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 
@@ -111,7 +111,7 @@ func (l *labeling) TrashView(c *fiber.Ctx) error {
 	}
 
 	index := view.MailViewIndex(*data)
-	views := view.MailView("| Spam Mail", false, flash.Get(c), check, index)
+	views := view.MailView("Trash Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 
@@ -136,7 +136,7 @@ func (l *labeling) FavoriteView(c *fiber.Ctx) error {
 	}
 
 	index := view.MailViewIndex(*data)
-	views := view.MailView("| Spam Mail", false, flash.Get(c), check, index)
+	views := view.MailView("Favorite Mail", false, flash.Get(c), check, index)
 
 	handler := adaptor.HTTPHandler(templ.Handler(views))
 

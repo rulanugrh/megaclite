@@ -3,6 +3,7 @@ package web
 import "time"
 
 type GetUser struct {
+	KeyID    string `json:"key_id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Address  string `json:"address"`
