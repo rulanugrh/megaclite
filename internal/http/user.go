@@ -23,6 +23,8 @@ type UserView interface {
 	LoginView(c *fiber.Ctx) error
 	ProfileView(c *fiber.Ctx) error
 	Logout(c *fiber.Ctx) error
+	UpdatePassword(c *fiber.Ctx) error
+	UpdateProfile(c *fiber.Ctx) error
 }
 
 type user struct {
@@ -165,4 +167,48 @@ func (u *user) Logout(c *fiber.Ctx) error {
 	}
 
 	return web.SuccessView(c, "Success Logout", nil, "/login")
+}
+
+func (u *user) UpdatePassword(c *fiber.Ctx) error {
+	token := c.Locals("Authorization").(string)
+	getEmail, err := u.middleware.GetEmail(token)
+	if err != nil {
+		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
+	}
+
+	var check bool = getEmail != ""
+	if !check {
+		return web.RedirectView(c, "Your token is invalid", "/login")
+	}
+
+	if err = u.service.UpdatePassword(getEmail, c.FormValue("password")); err != nil {
+		return web.RedirectView(c, "Sorry cannot update password", "/home/profile")
+	}
+
+	return web.SuccessView(c, "Success Update Password", nil, "/home/profile")
+
+}
+
+func (u *user) UpdateProfile(c *fiber.Ctx) error {
+	token := c.Locals("Authorization").(string)
+	getEmail, err := u.middleware.GetEmail(token)
+	if err != nil {
+		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
+	}
+
+	var check bool = getEmail != ""
+	if !check {
+		return web.RedirectView(c, "Your token is invalid", "/login")
+	}
+
+	request := domain.User{
+		Avatar:   c.FormValue("avatar"),
+		Address:  c.FormValue("address"),
+		Username: c.FormValue("username"),
+	}
+	if err = u.service.UpdateProfile(getEmail, request); err != nil {
+		return web.RedirectView(c, "Sorry cannot update profile", "/home/profile")
+	}
+
+	return web.SuccessView(c, "Success Update Profile", nil, "/home/profile")
 }

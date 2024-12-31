@@ -13,6 +13,8 @@ type UserInterface interface {
 	Login(req domain.Login, private string) (*web.ResponseLogin, error)
 	GetEmail(email string) (*web.GetUser, error)
 	GetByID(id uint) (*web.GetUser, error)
+	UpdatePassword(email string, password string) error
+	UpdateProfile(email string, req domain.User) error
 }
 
 type user struct {
@@ -131,4 +133,25 @@ func (u *user) GetByID(id uint) (*web.GetUser, error) {
 	}
 
 	return &response, nil
+}
+
+func (u *user) UpdatePassword(email string, password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return web.InternalServerError("Sorry cannot generate hash password")
+	}
+
+	if err = u.repository.UpdatePassword(email, string(hashedPassword)); err != nil {
+		return web.InternalServerError(err.Error())
+	}
+
+	return nil
+}
+
+func (u *user) UpdateProfile(email string, req domain.User) error {
+	if err := u.repository.UpdateProfile(email, req); err != nil {
+		return web.InternalServerError(err.Error())
+	}
+
+	return nil
 }

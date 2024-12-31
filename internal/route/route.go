@@ -39,6 +39,8 @@ func (v *viewRoute) Run(user handler.UserView, mail handler.MailView, label hand
 	v.app.Post("/register", user.RegisterView)
 	v.app.Get("/home/profile", v.commonMiddleware.ViewMiddleware, user.ProfileView)
 	v.app.Delete("/home/logout", v.commonMiddleware.ViewMiddleware, user.Logout)
+	v.app.Post("/update/password", v.commonMiddleware.ViewMiddleware, user.UpdatePassword)
+	v.app.Post("/update/profile", v.commonMiddleware.ViewMiddleware, user.UpdateProfile)
 
 	// Home Index
 	v.app.Get("/home", v.commonMiddleware.ViewMiddleware, mail.InboxView)
