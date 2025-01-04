@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
@@ -150,6 +152,7 @@ func (u *user) UpdatePassword(email string, password string) error {
 
 func (u *user) UpdateProfile(email string, req domain.User) error {
 	if err := u.repository.UpdateProfile(email, req); err != nil {
+		log.Println(err.Error())
 		return web.InternalServerError(err.Error())
 	}
 

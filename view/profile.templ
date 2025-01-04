@@ -13,9 +13,6 @@ templ ProfileIndex(data web.GetUser) {
 			<div class="container">
 				<div class="flex flex-wrap">
 					<div class="lg:w-1/2 w-full px-2 mb-10" align="center">
-						<img src="https://i.pinimg.com/736x/8c/22/98/8c22988b2f07b76c892fa84357f002c9.jpg" width="300" height="300" class="rounded-full shadow-lg dark:shadow-white/20 "/>
-					</div>
-					<div class="lg:w-1/2 md:w-1/2 w-full px-2 self-start space-y-8">
 						<div class="border-2 border-slate-500 rounded-lg">
 							<div class="border-b border-slate-500">
 								<h1 class="font-jetBrains text-white text-xl my-2 px-4">Information</h1>
@@ -65,13 +62,16 @@ templ ProfileIndex(data web.GetUser) {
 										type="text"
 										id="username"
 										name="username"
-										class="font-jetBrains dark:bg-gray-700 dark:text-lightColor w-full border dark:border-gray-700 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
+										class="font-jetBrains dark:bg-gray-500 dark:text-lightColor w-full border dark:border-gray-500 border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 dark:focus:border-gray-600"
 										autocomplete="off"
 										value={ data.Username }
 									/>
 								</div>
+								<button type="submit" class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Profile</button>
 							</form>
 						</div>
+					</div>
+					<div class="lg:w-1/2 md:w-1/2 w-full px-2">
 						<div class="border-2 border-slate-500 rounded-lg">
 							<div class="border-b border-slate-500">
 								<h1 class="font-jetBrains text-white text-xl my-2 px-4">Change Password</h1>
@@ -105,9 +105,7 @@ templ ProfileIndex(data web.GetUser) {
 										autocomplete="off"
 									/>
 								</div>
-								<div class="mb-4">
-									<button type="submit" class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Password</button>
-								</div>
+								<button type="submit" class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Password</button>
 							</form>
 						</div>
 					</div>

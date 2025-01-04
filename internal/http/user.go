@@ -166,7 +166,7 @@ func (u *user) Logout(c *fiber.Ctx) error {
 		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
 	}
 
-	return web.SuccessView(c, "Success Logout", nil, "/login")
+	return web.SuccessView(c, "Success Logout", nil, "/")
 }
 
 func (u *user) UpdatePassword(c *fiber.Ctx) error {

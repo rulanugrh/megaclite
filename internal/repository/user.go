@@ -84,7 +84,7 @@ func (u *user) GetMail(email string) (*domain.User, error) {
 }
 
 func (u *user) UpdatePassword(email string, password string) error {
-	err := u.connection.DB.Where("email = ?", email).Update("password", &password).Error
+	err := u.connection.DB.Model(&domain.User{}).Where("email = ?", email).Update("password", &password).Error
 	if err != nil {
 		return web.InternalServerError("Sorry cannot update password")
 	}
@@ -93,7 +93,7 @@ func (u *user) UpdatePassword(email string, password string) error {
 }
 
 func (u *user) UpdateProfile(email string, req domain.User) error {
-	if err := u.connection.DB.Where("email = ?", email).Update("avatar", &req.Avatar).Update("address", &req.Address).Update("username", &req.Username).Error; err != nil {
+	if err := u.connection.DB.Model(&domain.User{}).Where("email = ?", email).Update("avatar", req.Avatar).Update("address", req.Address).Update("username", req.Username).Error; err != nil {
 		return web.InternalServerError(fmt.Sprintf("Sorry cannot update profile somthing error: %s", err.Error()))
 	}
 
