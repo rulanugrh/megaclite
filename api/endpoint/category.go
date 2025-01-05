@@ -31,7 +31,7 @@ func NewCategoryAPI(service service.CategoryInterface) CategoryInterface {
 // @Accept json
 // @Produce json
 // @Param request body domain.CategoryRegister true "request body for create new category"
-// @Route /api/category/create [post]
+// @Router /api/category/create [post]
 // @Success 201 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -61,7 +61,7 @@ func (ct *category) Create(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path int true "id category"
-// @Route /api/category/delete/{id} [delete]
+// @Router /api/category/delete/{id} [delete]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -92,7 +92,7 @@ func (ct *category) Delete(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body domain.CategoryUpdate true "request body for updated data"
 // @Param id path int true "id category"
-// @Route /api/category/update/{id} [put]
+// @Router /api/category/update/{id} [put]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response

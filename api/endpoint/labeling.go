@@ -62,7 +62,7 @@ func (l *labeling) Create(c *fiber.Ctx) error {
 // @Produce json
 // @Param user_id path int true "user id"
 // @Param category path int true "category id"
-// @Route /api/label/get/{user_id}/{category}
+// @Router /api/label/get/{user_id}/{category} [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -100,7 +100,7 @@ func (l *labeling) FindByCategory(c *fiber.Ctx) error {
 // @Produce json
 // @Param request body domain.MailLabelRegister true "request body for update label"
 // @Param id path int true "parameter id"
-// @Route /api/label/update/{id} [put]
+// @Router /api/label/update/{id} [put]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response

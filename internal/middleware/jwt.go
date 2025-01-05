@@ -84,3 +84,17 @@ func (j *jsonwebtoken) GetUserID(token string) (uint, error) {
 
 	return claim.UserID, nil
 }
+
+func verifyToken(claim string) bool {
+	conf := config.GetConfig()
+	token, err := jwt.ParseWithClaims(claim, &jwtclaim{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(conf.Server.Secret), nil
+	})
+
+	if err != nil {
+		return false
+	}
+
+	return token.Valid
+
+}

@@ -36,7 +36,7 @@ func NewMailAPI(service service.MailInterface) MailInterface {
 // @Accept json
 // @Produce json
 // @Param request body domain.MailRegister true "request body for create mail"
-// @Route /api/mail/create [post]
+// @Router /api/mail/create [post]
 // @Success 200 {object} web.Response
 // @Failure 500 {object} web.Response
 // @Failure 400 {object} web.Response
@@ -67,11 +67,11 @@ func (m *mail) Create(c *fiber.Ctx) error {
 }
 
 // @Summary get all sent email
-// @ID getAll
+// @ID getSendMail
 // @Tags mails
 // @Accept json
 // @Produce json
-// @Route /api/mail/sent
+// @Router /api/mail/send [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -99,7 +99,7 @@ func (m *mail) Sent(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path int true "id mail"
-// @Route /api/mail/find/{id} [get]
+// @Router /api/mail/find/{id} [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -129,7 +129,7 @@ func (m *mail) GetByID(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path int true "id email"
-// @Route /api/mail/delete/{id} [delete]
+// @Router /api/mail/delete/{id} [delete]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -154,7 +154,7 @@ func (m *mail) Delete(c *fiber.Ctx) error {
 // @Tags mails
 // @Accept json
 // @Produce json
-// @Route /api/mail/inbox
+// @Router /api/mail/inbox [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response

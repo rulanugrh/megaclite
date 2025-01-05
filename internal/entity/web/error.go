@@ -59,6 +59,14 @@ func Forbidden(msg string) Response {
 	}
 }
 
+func Unauthorized(msg string) Response {
+	return Response{
+		Code:    400,
+		Message: msg,
+		Data:    nil,
+	}
+}
+
 func BadRequest(msg string) Response {
 	return Response{
 		Code:    400,

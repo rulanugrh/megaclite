@@ -63,7 +63,7 @@ func (u *user) Register(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param request body domain.Login true "request body for login existing account"
-// @Route /api/user/login [post]
+// @Router /api/user/login [post]
 // @Succes 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response
@@ -107,7 +107,7 @@ func (u *user) Login(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param emails path string true "Emails User"
-// @Route /api/user/{emails} [get]
+// @Router /api/user/{emails} [get]
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 500 {object} web.Response

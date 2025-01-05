@@ -3,11 +3,13 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/config"
+	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/sujit-baniya/flash"
 )
 
 type CommonMiddlewareInterface interface {
 	ViewMiddleware(c *fiber.Ctx) error
+	APIMiddleware(c *fiber.Ctx) error
 }
 
 type common struct {
@@ -38,5 +40,19 @@ func (cm *common) ViewMiddleware(c *fiber.Ctx) error {
 	}
 
 	c.Locals("Authorization", session.Get("Authorization"))
+	return c.Next()
+}
+
+func (cm *common) APIMiddleware(c *fiber.Ctx) error {
+	token := c.Get("Authorization")
+	if token == "" {
+		return c.Status(400).JSON(web.Unauthorized("Sorry you're not authorized"))
+	}
+
+	validToken := verifyToken(token)
+	if !validToken {
+		return c.Status(403).JSON(web.Forbidden("Sorry your token is invalid"))
+	}
+
 	return c.Next()
 }

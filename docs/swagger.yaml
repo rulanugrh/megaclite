@@ -46,9 +46,7 @@ definitions:
   domain.MailRegister:
     properties:
       attachment:
-        items:
-          type: string
-        type: array
+        type: string
       from:
         type: string
       message:
@@ -103,6 +101,100 @@ info:
   title: Megaclite API Documentation
   version: "1.0"
 paths:
+  /api/category/create:
+    post:
+      consumes:
+      - application/json
+      operationId: create
+      parameters:
+      - description: request body for create new category
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CategoryRegister'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: create category
+      tags:
+      - categories
+  /api/category/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: delete
+      parameters:
+      - description: id category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: delete category by id
+      tags:
+      - categories
+  /api/category/update/{id}:
+    put:
+      consumes:
+      - application/json
+      operationId: update
+      parameters:
+      - description: request body for updated data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CategoryUpdate'
+      - description: id category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: update category by id
+      tags:
+      - categories
   /api/label/add:
     post:
       consumes:
@@ -133,22 +225,27 @@ paths:
       summary: add mail to label
       tags:
       - labelings
-  /api/label/find/{id}:
+  /api/label/get/{user_id}/{category}:
     get:
       consumes:
       - application/json
-      operationId: findByID
+      operationId: findByCategory
       parameters:
-      - description: id label
+      - description: user id
         in: path
-        name: id
+        name: user_id
+        required: true
+        type: integer
+      - description: category id
+        in: path
+        name: category
         required: true
         type: integer
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/web.Response'
         "400":
@@ -159,9 +256,233 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/web.Response'
-      summary: find label by id
+      summary: find by category
       tags:
       - labelings
+  /api/label/update/{id}:
+    put:
+      consumes:
+      - application/json
+      operationId: updateLabel
+      parameters:
+      - description: request body for update label
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.MailLabelRegister'
+      - description: parameter id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: update label by user id
+      tags:
+      - labelings
+  /api/mail/create:
+    post:
+      consumes:
+      - application/json
+      operationId: createMail
+      parameters:
+      - description: request body for create mail
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.MailRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: create new mail
+      tags:
+      - mails
+  /api/mail/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      operationId: deleteMailByID
+      parameters:
+      - description: id email
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: '"delete mail by id"'
+      tags:
+      - mails
+  /api/mail/find/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: getByID
+      parameters:
+      - description: id mail
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: '"get mails by id"'
+      tags:
+      - mails
+  /api/mail/inbox:
+    get:
+      consumes:
+      - application/json
+      operationId: getAll
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: get all inbox email
+      tags:
+      - mails
+  /api/mail/send:
+    get:
+      consumes:
+      - application/json
+      operationId: getSendMail
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: get all sent email
+      tags:
+      - mails
+  /api/user/{emails}:
+    get:
+      consumes:
+      - application/json
+      operationId: get_by_emails
+      parameters:
+      - description: Emails User
+        in: path
+        name: emails
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: get user by emails
+      tags:
+      - users
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      operationId: login
+      parameters:
+      - description: request body for login existing account
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Login'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: login user
+      tags:
+      - users
   /api/user/register:
     post:
       consumes:

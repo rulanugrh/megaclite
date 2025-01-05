@@ -43,7 +43,7 @@ func main() {
 	common := middleware.NewCommonMiddleware(conf)
 
 	// Initialize API and Webview
-	apiRoute := api.NewAPIRoutes(conf)
+	apiRoute := api.NewAPIRoutes(conf, common)
 	viewRoute := route.NewViewRoute(conf, common)
 
 	// Initialize User Komponen
