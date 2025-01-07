@@ -78,11 +78,12 @@ func (m *mail) FindByID(id uint) (*web.GetDetailMail, error) {
 	}
 
 	response := web.GetDetailMail{
-		From:     data.From,
-		To:       data.To,
-		Title:    data.Title,
-		Message:  string(decryption),
-		Subtitle: data.Subtitle,
+		From:      data.From,
+		To:        data.To,
+		Title:     data.Title,
+		Message:   string(decryption),
+		Subtitle:  data.Subtitle,
+		CreatedAt: data.CreatedAt,
 	}
 
 	return &response, nil

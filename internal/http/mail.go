@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/rulanugrh/megaclite/internal/entity/domain"
+	"github.com/rulanugrh/megaclite/internal/entity/web"
 	"github.com/rulanugrh/megaclite/internal/middleware"
 	"github.com/rulanugrh/megaclite/internal/service"
 	"github.com/rulanugrh/megaclite/view"
@@ -21,6 +23,7 @@ type MailView interface {
 	InboxView(c *fiber.Ctx) error
 	SentView(c *fiber.Ctx) error
 	AddMail(c *fiber.Ctx) error
+	GetMail(c *fiber.Ctx) error
 }
 
 type mail struct {
@@ -103,6 +106,41 @@ func (m *mail) SentView(c *fiber.Ctx) error {
 	return handler(c)
 }
 
+func (m *mail) GetMail(c *fiber.Ctx) error {
+	token := c.Locals("Authorization").(string)
+	getMail, err := m.middleware.GetEmail(token)
+	if err != nil {
+		return web.RedirectView(c, "Not verify token, pls login", "/login")
+	}
+
+	var check bool = getMail != ""
+	if !check {
+		return web.RedirectView(c, "Not valid token", "/login")
+	}
+
+	getID := c.Params("id")
+	if getID == "" {
+		return web.RedirectView(c, "Sorry id invalid", "/home")
+	}
+
+	id, err := strconv.Atoi(getID)
+	if err != nil {
+		log.Println("Cannot parsing id: " + getID)
+		return web.RedirectView(c, "Invalid for parsing ID", "/home")
+	}
+
+	data, err := m.service.FindByID(uint(id))
+	if err != nil {
+		return web.RedirectView(c, "Sorry Cannot get Data", "/home")
+	}
+
+	index := view.DetailMailIndex(*data)
+	views := view.DetailMail("Detail Mail", false, flash.Get(c), check, index)
+
+	handler := adaptor.HTTPHandler(templ.Handler(views))
+	return handler(c)
+
+}
 func (m *mail) AddMail(c *fiber.Ctx) error {
 	msgError := fiber.Map{
 		"type": "error",
@@ -137,7 +175,6 @@ func (m *mail) AddMail(c *fiber.Ctx) error {
 			err := c.SaveFile(file, fmt.Sprintf("%s\\view\\public\\%d-%s", pwd, time.Now().Unix(), file.Filename))
 			if err != nil {
 				msgError["message"] = "Error while save attachment"
-				log.Println(err.Error())
 				return flash.WithError(c, msgError).Next()
 			}
 

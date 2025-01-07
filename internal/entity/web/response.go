@@ -17,11 +17,12 @@ type ResponseLogin struct {
 }
 
 type GetDetailMail struct {
-	Message  string `json:"msg"`
-	From     string `json:"from"`
-	To       string `json:"to"`
-	Title    string `json:"title"`
-	Subtitle string `json:"subtitle"`
+	Message   string    `json:"msg"`
+	From      string    `json:"from"`
+	To        string    `json:"to"`
+	Title     string    `json:"title"`
+	Subtitle  string    `json:"subtitle"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type GetMail struct {

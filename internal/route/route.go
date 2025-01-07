@@ -49,6 +49,7 @@ func (v *viewRoute) Run(user handler.UserView, mail handler.MailView, label hand
 	v.app.Get("/home/trash", v.commonMiddleware.ViewMiddleware, label.TrashView)
 	v.app.Get("/home/favorite", v.commonMiddleware.ViewMiddleware, label.FavoriteView)
 	v.app.Get("/home/spam", v.commonMiddleware.ViewMiddleware, label.SpamView)
+	v.app.Get("/home/detail/:id", v.commonMiddleware.ViewMiddleware, mail.GetMail)
 
 	// Label Index
 	v.app.Post("/label/add/:categoryID/:id", v.commonMiddleware.ViewMiddleware, label.Add)
