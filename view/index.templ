@@ -1,10 +1,9 @@
 package view
 import (
     "github.com/gofiber/fiber/v2"
-	"github.com/rulanugrh/megaclite/view/partials"
 )
 
-templ Layout(page string, msg fiber.Map, isError bool, authorize bool) {
+templ Index(page string, msg fiber.Map, isError bool) {
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -28,11 +27,7 @@ templ Layout(page string, msg fiber.Map, isError bool, authorize bool) {
 			<script src="/assets/js/script.js"></script>
         </head>
 		<body class="font-jetBrains">
-			if authorize {
-				@partials.Navbar()
-			}
-			{ children... }
-			@partials.FlashMessages(msg)
+			
 		</body>
     </html>
 }
