@@ -25,6 +25,7 @@ type UserView interface {
 	Logout(c *fiber.Ctx) error
 	UpdatePassword(c *fiber.Ctx) error
 	UpdateProfile(c *fiber.Ctx) error
+	HomeView(c *fiber.Ctx) error
 }
 
 type user struct {
@@ -99,29 +100,37 @@ func (u *user) LoginView(c *fiber.Ctx) error {
 
 		data, err := u.service.Login(request, string(content))
 		if err != nil {
-			return web.RedirectView(c, err.Error(), "/")
+			return web.RedirectView(c, err.Error(), "/login")
 		}
 
 		token, err := u.middleware.GenerateToken(*data)
 		if err != nil {
-			return web.RedirectView(c, err.Error(), "/")
+			return web.RedirectView(c, err.Error(), "/login")
 		}
 
 		session, err := u.conf.Store.Get(c)
 		if err != nil {
-			return web.RedirectView(c, "cannot create new session", "/")
+			return web.RedirectView(c, "cannot create new session", "/login")
 		}
 
 		session.Set("Authorization", token)
 		err = session.Save()
 
 		if err != nil {
-			return web.RedirectView(c, "cannot save new session", "/")
+			return web.RedirectView(c, "cannot save new session", "/login")
 		}
 
 		return web.SuccessView(c, "Success Login Account", data, "/home")
 	}
 
+	return handler(c)
+}
+
+func (u *user) HomeView(c *fiber.Ctx) error {
+	protected := c.Locals("protected").(bool)
+	index := view.Index("Welcome", flash.Get(c), protected)
+
+	handler := adaptor.HTTPHandler(templ.Handler(index))
 	return handler(c)
 }
 
@@ -166,6 +175,7 @@ func (u *user) Logout(c *fiber.Ctx) error {
 		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
 	}
 
+	c.Locals("protected", false)
 	return web.SuccessView(c, "Success Logout", nil, "/")
 }
 

@@ -33,8 +33,9 @@ func NewViewRoute(conf *config.App, middleware middleware.CommonMiddlewareInterf
 func (v *viewRoute) Run(user handler.UserView, mail handler.MailView, label handler.LabelingView) {
 	v.app.Static("/assets", "./view/assets")
 	// Views User
-	v.app.Get("/", user.LoginView)
-	v.app.Post("/", user.LoginView)
+	v.app.Get("/", v.commonMiddleware.ViewMiddleware, user.HomeView)
+	v.app.Get("/login", user.LoginView)
+	v.app.Post("/login", user.LoginView)
 	v.app.Get("/register", user.RegisterView)
 	v.app.Post("/register", user.RegisterView)
 	v.app.Get("/home/profile", v.commonMiddleware.ViewMiddleware, user.ProfileView)
