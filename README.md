@@ -1,6 +1,9 @@
 # Megaclite
 ![banner](.github/index.png)
 
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+
+
 # Background Project
 This project was actually due to my campus assignment on database security. Finally from there I thought of the idea to build a webmail system by applying the PGP algorithm so that the login process and sending mail the data is securely encrypted which is only known by the user. 
 
