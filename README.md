@@ -25,6 +25,8 @@ after that you can copy depedency `.env.example` to `.env`
 ```bash
 $ cp .env.example .env
 
+# install package
+$ go mod tidy
 ```
 and then, you can migrate with this command
 ```bash
