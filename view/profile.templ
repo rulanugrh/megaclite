@@ -15,7 +15,7 @@ templ ProfileIndex(data web.GetUser) {
 					<div class="lg:w-1/2 w-full px-2 mb-10" align="center">
 						<div class="border-2 border-slate-500 rounded-lg">
 							<div class="border-b border-slate-500">
-								<h1 class="font-jetBrains text-white text-xl my-2 px-4">Information</h1>
+								<h1 class="font-jetBrains dark:text-white text-gray-900 text-xl my-2 px-4">Information</h1>
 							</div>
 							<form action="/update/profile" method="post" hx-swap="transition:true" class="py-6 px-4">
 								<div class="flex grid grid-cols-1 lg:grid-cols-2 lg:space-x-4">
@@ -67,14 +67,14 @@ templ ProfileIndex(data web.GetUser) {
 										value={ data.Username }
 									/>
 								</div>
-								<button type="submit" class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Profile</button>
+								<button type="submit" class="bg-gray-900 dark:bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Profile</button>
 							</form>
 						</div>
 					</div>
 					<div class="lg:w-1/2 md:w-1/2 w-full px-2">
 						<div class="border-2 border-slate-500 rounded-lg">
 							<div class="border-b border-slate-500">
-								<h1 class="font-jetBrains text-white text-xl my-2 px-4">Change Password</h1>
+								<h1 class="font-jetBrains dark:text-white text-gray-900 text-xl text-center my-2 px-4">Change Password</h1>
 							</div>
 							<form action="/update/password" method="post" hx-swap="transition:true" class="py-6 px-4">
 								<div class="mb-4">
@@ -105,7 +105,7 @@ templ ProfileIndex(data web.GetUser) {
 										autocomplete="off"
 									/>
 								</div>
-								<button type="submit" class="bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Password</button>
+								<button type="submit" class="bg-gray-900 dark:bg-blue-500 mt-4 hover:bg-blue-600 text-white rounded-lg font-semibold py-2 px-4 w-full">Update Password</button>
 							</form>
 						</div>
 					</div>

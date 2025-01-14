@@ -143,18 +143,18 @@ func (u *user) ProfileView(c *fiber.Ctx) error {
 	getEmail, err := u.middleware.GetEmail(token)
 	if err != nil {
 		log.Println(err)
-		return web.RedirectView(c, err.Error(), "/home")
+		return web.RedirectView(c, err.Error(), "/")
 	}
 
 	var check bool = getEmail != ""
 	if !check {
-		return web.RedirectView(c, "Sorry your token is invalid", "/home")
+		return web.RedirectView(c, "Sorry your token is invalid", "/")
 	}
 
 	data, err := u.service.GetEmail(getEmail)
 	if err != nil {
 		log.Println(err)
-		return web.RedirectView(c, err.Error(), "/home")
+		return web.RedirectView(c, err.Error(), "/")
 	}
 
 	index := view.ProfileIndex(*data)
@@ -183,7 +183,7 @@ func (u *user) UpdatePassword(c *fiber.Ctx) error {
 	token := c.Locals("Authorization").(string)
 	getEmail, err := u.middleware.GetEmail(token)
 	if err != nil {
-		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
+		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/")
 	}
 
 	var check bool = getEmail != ""
@@ -192,7 +192,7 @@ func (u *user) UpdatePassword(c *fiber.Ctx) error {
 	}
 
 	if err = u.service.UpdatePassword(getEmail, c.FormValue("password")); err != nil {
-		return web.RedirectView(c, "Sorry cannot update password", "/home/profile")
+		return web.RedirectView(c, "Sorry cannot update password", "/")
 	}
 
 	return web.SuccessView(c, "Success Update Password", nil, "/home/profile")
@@ -203,7 +203,7 @@ func (u *user) UpdateProfile(c *fiber.Ctx) error {
 	token := c.Locals("Authorization").(string)
 	getEmail, err := u.middleware.GetEmail(token)
 	if err != nil {
-		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/home")
+		return web.RedirectView(c, fmt.Sprintf("something wrong: %s", err.Error()), "/")
 	}
 
 	var check bool = getEmail != ""
@@ -217,7 +217,7 @@ func (u *user) UpdateProfile(c *fiber.Ctx) error {
 		Username: c.FormValue("username"),
 	}
 	if err = u.service.UpdateProfile(getEmail, request); err != nil {
-		return web.RedirectView(c, "Sorry cannot update profile", "/home/profile")
+		return web.RedirectView(c, "Sorry cannot update profile", "/")
 	}
 
 	return web.SuccessView(c, "Success Update Profile", nil, "/home/profile")

@@ -35,7 +35,7 @@ templ Index(page string, msg fiber.Map, protected bool) {
 			<div class="lg:container">
 				<div class="lg:max-w-7xl mx-auto px-4">
 					<div class="px-4 mb-5 self-center">
-						<nav class="flex lg:px-5 py-3 text-gray-700 rounded-lg " aria-label="Breadcrumb">
+						<nav class="flex lg:px-5 py-3 text-gray-900 rounded-lg " aria-label="Breadcrumb">
 							<ol class="inline-flex items-center space-x-1 md:space-x-3">
 								<li class="inline-flex items-center">
 									<a href="#"
@@ -52,39 +52,39 @@ templ Index(page string, msg fiber.Map, protected bool) {
 								if !protected {
 									<li aria-current="page">
 										<div class="flex items-center">
-											<svg aria-hidden="true" class="w-6 h-6  dark:text-white/75 text-gray-400"
+											<svg aria-hidden="true" class="w-6 h-6  dark:text-white/75 text-gray-900"
 												fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 												<path fill-rule="evenodd"
 													d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
 													clip-rule="evenodd"></path>
 											</svg>
 											<a href="/login"
-												class="ml-1 lg:text-lg text-base  font-jetBrains font-semibold dark:text-white text-gray-700 md:ml-2">Login</a>
+												class="ml-1 lg:text-lg text-base  font-jetBrains font-semibold dark:text-white text-gray-900 md:ml-2">Login</a>
 										</div>
 									</li>
 									<div class="flex items-center">
-										<svg aria-hidden="true" class="w-6 h-6 dark:text-white/75 text-gray-400"
+										<svg aria-hidden="true" class="w-6 h-6 dark:text-white/75 text-gray-900"
 											fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 											<path fill-rule="evenodd"
 												d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
 												clip-rule="evenodd"></path>
 										</svg>
 										<a href="/register"
-											class="ml-1 lg:text-lg text-base font-jetBrains font-semibold dark:text-white text-gray-700 md:ml-2">Register</a>
+											class="ml-1 lg:text-lg text-base font-jetBrains font-semibold dark:text-white text-gray-900 md:ml-2">Register</a>
 									</div>
 									
 								} else {
 									
 									<li aria-current="page">
 										<div class="flex items-center">
-											<svg aria-hidden="true" class="w-6 h-6  dark:text-white/75 text-gray-400"
+											<svg aria-hidden="true" class="w-6 h-6  dark:text-white/75 text-gray-900"
 												fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 												<path fill-rule="evenodd"
 													d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
 													clip-rule="evenodd"></path>
 											</svg>
 											<a href="/home"
-												class="ml-1 lg:text-lg text-base  font-jetBrains font-semibold dark:text-white text-gray-700 md:ml-2">Dashboard</a>
+												class="ml-1 lg:text-lg text-base  font-jetBrains font-semibold dark:text-white text-gray-900 md:ml-2">Dashboard</a>
 										</div>
 									</li>
 								}
@@ -104,9 +104,9 @@ templ Index(page string, msg fiber.Map, protected bool) {
 								class="rounded-lg shadow-sm dark:shadow-orange-400 shadow-gray-900">
 						</div>
 						<div class="w-full px-4">
-							<h1 class="lg:text-2xl mb-4 dark:text-white text-gray-700"> > Wello, i'am <span
+							<h1 class="lg:text-2xl mb-4 dark:text-white text-gray-900"> > Wello, i'am <span
 									class="title dark:text-orange-400 text-orange-600"></span></h1>
-							<p class="text-base font-thin dark:text-white text-gray-700"><span
+							<p class="text-base font-thin dark:text-white text-gray-900"><span
 									class="italic">Megaclite</span> 
 									An innovative webmail service that combines the convenience of email usage with a very high level of security through OpenPGP encryption. Designed to protect user privacy, Megaclite offers an easily accessible email platform through a browser with robust end-to-end encryption features. This means that only the sender and recipient can access the contents of the message, safeguarding it from potential external threats such as hacking or unauthorized surveillance. </p>
 						</div>
@@ -120,10 +120,10 @@ templ Index(page string, msg fiber.Map, protected bool) {
 					<h1
 						class="font-semibold font-jetBrains mb-2 lg:text-3xl text-xl text-gray-900 dark:text-orange-400 text-center">
 						Advantages of the Application</h1>
-					<p class="font-thin text-base dark:text-white/75 text-gray-500 text-center mb-5 lg:mb-10">Maximum Security, Uncompromising Privacy</p>
+					<p class="font-thin text-base dark:text-white/75 text-gray-900 text-center mb-5 lg:mb-10">Maximum Security, Uncompromising Privacy</p>
 					<div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 lg:gap-4 md:gap-3">
-						<div class="relative flex flex-col text-gray-700   rounded-xl w-full ">
-							<div class="relative mx-4 mt-4 overflow-hidden text-gray-700  rounded-xl h-80">
+						<div class="relative flex flex-col text-gray-900   rounded-xl w-full ">
+							<div class="relative mx-4 mt-4 overflow-hidden text-gray-900  rounded-xl h-80">
 								<img src="/assets/img/load.webp" title="https://jp.pinterest.com/pin/3237030969519768/" class="object-cover w-full h-full">
 							</div>
 							<div class="p-6">
@@ -132,13 +132,13 @@ templ Index(page string, msg fiber.Map, protected bool) {
 										Robust Application
 									</p>
 								</div>
-								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-700 dark:text-white opacity-75 dark:text-lightCream">
+								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-900 dark:text-white opacity-75 dark:text-lightCream">
 									This app is incredibly fast at sending emails and efficiently retrieving emails from each category.
 								</p>
 							</div>
 						</div>
-						<div class="relative flex flex-col text-gray-700   rounded-xl w-full ">
-							<div class="relative mx-4 mt-4 overflow-hidden text-gray-700  rounded-xl h-80">
+						<div class="relative flex flex-col text-gray-900   rounded-xl w-full ">
+							<div class="relative mx-4 mt-4 overflow-hidden text-gray-900  rounded-xl h-80">
 								<img src="/assets/img/secure.webp" title="https://jp.pinterest.com/pin/104779128814023106/" class="object-cover w-full h-full">
 							</div>
 							<div class="p-6">
@@ -147,13 +147,13 @@ templ Index(page string, msg fiber.Map, protected bool) {
 										Secure Application
 									</p>
 								</div>
-								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-700 dark:text-white opacity-75 dark:text-lightCream">
+								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-900 dark:text-white opacity-75 dark:text-lightCream">
 									Advanced security with each user having a unique public key and its own distinct serial key.
 								</p>
 							</div>
 						</div>
-						<div class="relative flex flex-col text-gray-700   rounded-xl w-full ">
-							<div class="relative mx-4 mt-4 overflow-hidden text-gray-700  rounded-xl h-80">
+						<div class="relative flex flex-col text-gray-900   rounded-xl w-full ">
+							<div class="relative mx-4 mt-4 overflow-hidden text-gray-900  rounded-xl h-80">
 								<img src="/assets/img/cbeb9fc092706fc47e8c572da159687c.jpg" title="https://jp.pinterest.com/pin/104779128814023106/" class="object-cover w-full h-full">
 							</div>
 							<div class="p-6">
@@ -162,7 +162,7 @@ templ Index(page string, msg fiber.Map, protected bool) {
 										Private Message
 									</p>
 								</div>
-								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-700 dark:text-white opacity-75 dark:text-lightCream">
+								<p class="block font-roboto text-sm antialiased font-normal leading-normal text-gray-900 dark:text-white opacity-75 dark:text-lightCream">
 									This message is encrypted, ensuring maximum privacy, and can only be read by the intended recipient.
 								</p>
 							</div>

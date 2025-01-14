@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/rulanugrh/megaclite/config"
 	"github.com/rulanugrh/megaclite/internal/entity/web"
+	"github.com/sujit-baniya/flash"
 )
 
 type CommonMiddlewareInterface interface {
@@ -21,16 +22,24 @@ func NewCommonMiddleware(conf *config.App) CommonMiddlewareInterface {
 	}
 }
 func (cm *common) ViewMiddleware(c *fiber.Ctx) error {
-	session, _ := cm.conf.Store.Get(c)
+	fm := fiber.Map{
+		"type": "error",
+	}
+	session, err := cm.conf.Store.Get(c)
 	if session.Get("Authorization") == nil {
+		fm["message"] = "Your are not authorized"
 
 		c.Locals("protected", false)
-		return c.Next()
+		return flash.WithError(c, fm).Next()
+	}
+	if err != nil {
+		fm["message"] = "Cannot Create New Session"
+		c.Locals("protected", false)
+		return flash.WithError(c, fm).Next()
 	}
 
 	c.Locals("Authorization", session.Get("Authorization"))
 	c.Locals("protected", true)
-
 	return c.Next()
 }
 
