@@ -27,7 +27,7 @@ func (cm *common) ViewMiddleware(c *fiber.Ctx) error {
 	}
 	session, err := cm.conf.Store.Get(c)
 	if session.Get("Authorization") == nil {
-		fm["message"] = "Your are not authorized"
+		fm["message"] = "You are not authorize"
 
 		c.Locals("protected", false)
 		return flash.WithError(c, fm).Next()
@@ -35,7 +35,7 @@ func (cm *common) ViewMiddleware(c *fiber.Ctx) error {
 	if err != nil {
 		fm["message"] = "Cannot Create New Session"
 		c.Locals("protected", false)
-		return flash.WithError(c, fm).Next()
+		return flash.WithError(c, fm).Redirect("/")
 	}
 
 	c.Locals("Authorization", session.Get("Authorization"))
